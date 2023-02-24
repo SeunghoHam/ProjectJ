@@ -1,15 +1,13 @@
+using AmplifyShaderEditor;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.IO;
 using UniRx;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
-{
-
-    MouseController _mouseController;
+{ 
     CharacterController controller;
     //Animator anim;
     Transform cam;
@@ -17,19 +15,22 @@ public class CharacterMovement : MonoBehaviour
     float _speedSmoothTime = 1f;
     float _currentSpeed;
     float _velocityY;
-    Vector3 _moveInput;
-    Vector3 _dir;
 
     float gravity = 25.0f;
-    float moveSpeed = 3.0f;
+    float moveSpeed = 5.0f;
     float rotateSpeed = 3.0f;
 
     [SerializeField] private GameObject _rotateActor;
     [SerializeField] private Transform _target;
 
+    private float _rotX;
+    private float _rotY;
+    private float _sensitivity = 5f;
+
+    Quaternion _xTargetRotation;
+    Quaternion _yTargetRotation;
     void Start()
     {
-        _mouseController = this.GetComponent<MouseController>();
         controller = this.gameObject.GetComponent<CharacterController>();
         cam = Camera.main.transform;
         CursurSetting();
@@ -41,69 +42,68 @@ public class CharacterMovement : MonoBehaviour
         GetInput();
         //PlayerMovement();
         //PlayerRotation();
+        MouseRotator();
         InputAction();
 
         
     }
-    private void LateUpdate()
-    {
-    }
 
     private void CursurSetting() // 임시니까 그냥 Movement에 박음
     {
+        Application.targetFrameRate = 60;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow, 0);
     }
     private void GetInput()
     {
-
-        _moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized; // 이동 각도 가져오기
-        Vector3 forward = Vector3.forward;
-        Vector3 right = Vector3.right;
-        forward.y = 0;
-        right.y = 0;
-
-        if (_moveInput.x == 0 && _moveInput.y == 0) // 입력이 없는 상태
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized; // 이동 각도 가져오기. normalize 해제하기
+        /*
+        if (direction.x == 0 && direction.z == 0) // 입력이 없는 상태
         {
-            _dir = Vector3.zero;
+            direction = Vector3.zero;
         }
-        else // _dir 전달
+        else // 방향 전달*/
         {
-            _dir = (forward * _moveInput.y + right * _moveInput.x); // normalized 하면 1 / 0 만 존재하게 되서 딱 딱 끊김
-                                                                    // 만약 공격이나 애니메이션 동작중이 아니라면 : 조건문 추가해줘야
+            // +(조건문 추가) 만약 공격이나 애니메이션 동작중이 아니라면
+            if (direction.z == 1) // 정규화된 움직임(앞으로 가는중)
+            {
+                DebugManager.ins.Log("↑", DebugManager.TextColor.Yellow);
+                _rotateActor.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _yTargetRotation, 0.3f);
+            }
+            else if (direction.z == -1)
+            {
+                DebugManager.ins.Log("↓", DebugManager.TextColor.Yellow);
+            }
 
-            //Quaternion newRot = Quaternion.Euler(0, _target.transform.localRotation.y, 0); // target에서 y값만 가져오기 위해서
-            _rotateActor.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _target.transform.localRotation, 1f);
-            // 이동은 target이 바라보는 방향으로 진행되도록
+            if (direction.x == 1)
+            {
+                DebugManager.ins.Log("→", DebugManager.TextColor.Blue);
+            }
+            else if (direction.x == -1)
+            {
+                DebugManager.ins.Log("←", DebugManager.TextColor.Blue);
+            }
+
+            // _dir = (forward * _moveInput.y + right * _moveInput.x); // 정규화(normalize) 하면 1 / 0 만 존재하게 되서 딱 딱 끊김
+            // Quaternion을 전달해야 회전이 깔끔하게 됨(EulerAngles불가)
             _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
-            //Vector3 velocity = (_dir * _currentSpeed) + Vector3.up * _velocityY; // 기존 이동방식
-
-            //controller.Move(_rotateActor.transform.localRotation* direction * Time.deltaTime);
+            controller.Move(_rotateActor.transform.localRotation * direction * _currentSpeed * Time.deltaTime);
         }
         if (_velocityY > -10) _velocityY -= Time.deltaTime * gravity;
-        //Vector3 forward = cam.forward;
-        //Vector3 right = cam.right;
-
-        //forward.Normalize();
-        //right.Normalize();
-
-        // 이동 방향은 target의 RotValue를 기준으로 함
     }
-    private void PlayerMovement()
-    {
-    
 
-
-        // 애니메이션 적용 
-        //anim.SetFloat("Movement", _dir.magnitude, 0.1f, Time.deltaTime);
-    }
-    private void PlayerRotation()
+    private void MouseRotator()
     {
-        if (_dir.magnitude == 0) return;
-        Vector3 rotDir = new Vector3(_dir.x, _dir.y, _dir.z);
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotDir), Time.deltaTime);
+        Vector2 mouseAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // 십자좌표계
+        _rotX += (mouseAxis.x * _sensitivity);
+        _rotY += (mouseAxis.y * _sensitivity);
+
+        _rotY = Mathf.Clamp(_rotY, -30f, 30f);
+        _yTargetRotation = Quaternion.Euler(0, _rotX, 0); // 좌우회전
+        _xTargetRotation = Quaternion.Euler(_rotY, 0, 0); // 상하회전
+
+        _target.transform.localRotation = _yTargetRotation * _xTargetRotation; // 행렬연산이기에 곱연산이 합이된다.
     }
     private void InputAction()
     {
@@ -112,5 +112,7 @@ public class CharacterMovement : MonoBehaviour
         {
              DebugManager.ins.Log("타겟팅 동작", DebugManager.TextColor.Blue);
         }
+
+
     }
 }

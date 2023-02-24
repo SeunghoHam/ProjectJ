@@ -40,6 +40,10 @@ public class DebugManager : MonoBehaviour
                 Debug.Log("<color=aqua>" + contents + "</color>");
                 break;
         }
-
     }
+    public void LogError(string contents)
+    {
+        Debug.LogError(contents);
+    }
+
 }
