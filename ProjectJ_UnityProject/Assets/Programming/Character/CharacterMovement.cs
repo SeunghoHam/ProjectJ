@@ -57,7 +57,7 @@ public class CharacterMovement : MonoBehaviour
     }
     private void GetInput()
     {
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized; // 이동 각도 가져오기. normalize 해제하기
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // 이동 각도 가져오기. normalize 해제하기
         /*
         if (direction.x == 0 && direction.z == 0) // 입력이 없는 상태
         {
@@ -66,23 +66,25 @@ public class CharacterMovement : MonoBehaviour
         else // 방향 전달*/
         {
             // +(조건문 추가) 만약 공격이나 애니메이션 동작중이 아니라면
-            if (direction.z == 1) // 정규화된 움직임(앞으로 가는중)
+            if (direction.normalized.z == 1) // 정규화된 움직임(앞으로 가는중)
             {
                 DebugManager.ins.Log("↑", DebugManager.TextColor.Yellow);
                 _rotateActor.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _yTargetRotation, 0.3f);
             }
-            else if (direction.z == -1)
+            else if (direction.normalized.z == -1)
             {
+                // 카메라 바라보게 뒤로 돌기
                 DebugManager.ins.Log("↓", DebugManager.TextColor.Yellow);
             }
 
-            if (direction.x == 1)
+            if (direction.normalized.x == 1)
             {
                 DebugManager.ins.Log("→", DebugManager.TextColor.Blue);
             }
-            else if (direction.x == -1)
+            else if (direction.normalized.x == -1)
             {
                 DebugManager.ins.Log("←", DebugManager.TextColor.Blue);
+                
             }
 
             // _dir = (forward * _moveInput.y + right * _moveInput.x); // 정규화(normalize) 하면 1 / 0 만 존재하게 되서 딱 딱 끊김

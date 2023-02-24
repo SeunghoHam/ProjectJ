@@ -6,6 +6,7 @@ using UniRx;
 using System;
 using System.Threading;
 using System.Linq;
+using Unity.VisualScripting;
 
 namespace Assets.Scripts.UI
 {
@@ -75,8 +76,11 @@ namespace Assets.Scripts.UI
                 {
                     // 카메라 할당 O
                     // 카메라 매니저 따로 안만들고 그냥 메인캠 할당시킴
-                    popupCanvas.worldCamera = Camera.main; 
-                    popupCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+
+                    //popupCanvas.worldCamera = Camera.main; 
+                    //popupCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+                    popupCanvas.worldCamera = null;
+                    popupCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
                 }
                 popupBase.transform.SetParent(transform);
                 popupBase.transform.localScale = Vector3.one;
@@ -88,11 +92,10 @@ namespace Assets.Scripts.UI
         }
 
         // Show
-        /*
-        public IObserver<T> Show<T> (PopupStyle style,params object[] data) where T: PopupBase
+        public IObservable<T> Show<T> (PopupStyle style, params object[] data) where T: PopupBase
         {
-            return Observable.FromCoroutine<T>((observer, token)=>Show(observer,token,style,data);
-        }*/
+            return Observable.FromCoroutine<T>((observer,token)=>Show(observer,token,style,data)); // 인자가 4개인 Show 불러오기
+        }
         private IEnumerator Show<T>(IObserver<T> observer, CancellationToken token, PopupStyle style, object[] data) where T: PopupBase 
         {
             yield return Get<T>(token, style);
@@ -104,6 +107,13 @@ namespace Assets.Scripts.UI
 
             observer.OnNext(popupBase.GetComponent<T>());
             observer.OnCompleted();
+        }
+
+        public void Hide(PopupStyle style)
+        {
+            var popup = PopupList.Find(child => child.PopupStyle.Equals(style));
+            if (popup != null && popup.gameObject.activeSelf)
+                popup.Hide();
         }
         // = Method
         private string GetPopupName(PopupStyle style)

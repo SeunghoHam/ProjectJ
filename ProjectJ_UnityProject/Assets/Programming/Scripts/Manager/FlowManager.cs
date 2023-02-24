@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using System;
 
 namespace Assets.Scripts.Manager
 {
@@ -23,10 +24,32 @@ namespace Assets.Scripts.Manager
             // 현재 FlowNode의 개수가 1이상이라면 개수의 -1(배열이니까) 반환, 0이면 null 반환
             return (_listNode.Count > 0 ? _listNode[_listNode.Count - 1] : null);
         }
+
+        
+        public IObservable<T> AddSubPopup<T>(PopupStyle style, params object[] data) where T : PopupSub
+        {
+            return PopupManager.Instance.Show<T>(style, data);
+        }
         public void AddSubPopup(PopupStyle style, params object[] data) //
         {
-            // Template형 불러옴
-            //PopupManager.Instance.Show<PopupSub>(style, data);
+            PopupManager.Instance.Show<PopupSub>(style, data).Subscribe();
+        }
+        
+        public void Change(PopupStyle style, params object[] data) // void : Change
+        {
+            if (CurStyle == style && style != PopupStyle.None)
+                return;
+
+            var node = GetLastNode();
+            PopupManager.Instance.Hide(node != null ? node.Style : CurStyle);
+            AllHideSubPopup(true);
+            CurStyle = style;
+
+            if (style == PopupStyle.None)
+                return;
+
+            AddFlow(style, data);
+            PopupManager.Instance.Show<PopupBase>(style, data).Subscribe();
         }
         private void AllHideSubPopup(bool isForce)
         {
@@ -65,7 +88,6 @@ namespace Assets.Scripts.Manager
     }
 
   
-
 
 
     // =SubClass
