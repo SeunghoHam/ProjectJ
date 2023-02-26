@@ -217,7 +217,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -151.288, z: 0}
---- !u!1001 &1104479958
+--- !u!1001 &1405881749
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -272,14 +272,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Iroha
       objectReference: {fileID: 0}
-    - target: {fileID: 8504537566521359151, guid: 57e17f982e61b0b4482affa15ff3b651, type: 3}
-      propertyPath: m_Materials.Array.data[7]
+    - target: {fileID: 7601347613779497654, guid: 57e17f982e61b0b4482affa15ff3b651, type: 3}
+      propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 2100000, guid: ffb19ad825d87df4b9ccb5c1e777746c, type: 2}
-    - target: {fileID: 8504537566521359151, guid: 57e17f982e61b0b4482affa15ff3b651, type: 3}
-      propertyPath: m_Materials.Array.data[8]
-      value: 
-      objectReference: {fileID: 2100000, guid: 154c683800840944dbce14fe8a3f4356, type: 2}
+      objectReference: {fileID: 9100000, guid: 9ac2012ede102be4690715c92a58b3c5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57e17f982e61b0b4482affa15ff3b651, type: 3}
 --- !u!1 &1639940976

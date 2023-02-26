@@ -1,56 +1,11 @@
 fileFormatVersion: 2
-guid: 17aa93142750b1f44ac29fdf73f6b501
+guid: 129e0dc7b79458c418f34bbada605cb7
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 01_Iroha_Face_Mat
-    second: {fileID: 2100000, guid: ffb19ad825d87df4b9ccb5c1e777746c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 02_Iroha_Body_Mat
-    second: {fileID: 2100000, guid: d762f7137f44f0f41af26040c7b4d840, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 03_Iroha_Wear_Inner_Mat
-    second: {fileID: 2100000, guid: 56f86ffe50f5d284f83e189df394848c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 04_Iroha_Wear_Outer_Mat
-    second: {fileID: 2100000, guid: 154c683800840944dbce14fe8a3f4356, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 05_Iroha_Hair_Pony_Mat
-    second: {fileID: 2100000, guid: 8d993771feea63c4fb0f5c09c80b5d25, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 06_Iroha_Hair_Acce_Mat
-    second: {fileID: 2100000, guid: f997c8ffbd7778845b9e7f78edee4b28, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 07_Iroha_Hair_Mat
-    second: {fileID: 2100000, guid: 0ca85afa0c9ea0949941a0b6395e530a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 08_Iroha_Eye_Parts_Mat
-    second: {fileID: 2100000, guid: b7f576377c4babc4cbbb80f91959e7d8, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: 09_Iroha_Eyes_Mat
-    second: {fileID: 2100000, guid: f4db5aad18ef8b54192601ae167f1435, type: 2}
+  externalObjects: {}
   materials:
-    materialImportMode: 1
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -121,7 +76,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
