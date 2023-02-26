@@ -11,5 +11,4 @@ public class CameraController : MonoBehaviour
         _brain = this.GetComponent<CinemachineBrain>(); 
     }
     // 모션에 맞는거 미리 정의해두기
-    
 }
