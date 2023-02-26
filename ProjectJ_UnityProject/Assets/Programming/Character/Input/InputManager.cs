@@ -5,7 +5,8 @@ using UniRx;
 
 public class InputManager : MonoBehaviour
 {
-    private CharacterMovement characterMovement;
+    private CharacterMovement Movement;
+    private CharacterAnimator Animator;
     // Input
     private float _refChargeTime = 0.7f;
     private float _curChargeTime;
@@ -14,7 +15,8 @@ public class InputManager : MonoBehaviour
     private bool _isReady; // 우클릭시 준비상태
     private void Start()
     {
-        characterMovement = this.GetComponent<CharacterMovement>();
+        Movement = this.GetComponent<CharacterMovement>();
+        Animator = Character.Instance.characterAnimator;
         InputSetting();
     }
     private void InputSetting()
@@ -25,7 +27,11 @@ public class InputManager : MonoBehaviour
         var mouseRightDownStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonDown(1));
         var mouseRightUpStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonUp(1));
 
-        var targetPinStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Q));
+        var targetPinStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Q)).Subscribe(_ => PinTarget());
+        var jumpStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Space)).Subscribe(_=> Jump());
+        var rollStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftControl)).Subscribe(_=> Roll());
+        var runStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftShift)).Subscribe(_=> Run());
+        var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift)).Subscribe(_ => RunCancel());
 
         // 롱클릭
         mouseLeftDownStream
@@ -35,7 +41,6 @@ public class InputManager : MonoBehaviour
             .RepeatUntilDestroy(gameObject)
            .Subscribe(_ => _isCharge = true);
 
-       
         // 롱클릭 취소
         mouseLeftDownStream.Timestamp()
             .Zip(mouseLeftUpStream.Timestamp(), (d, u) => (u.Timestamp - d.Timestamp).TotalMilliseconds / 1000.0f)
@@ -49,8 +54,6 @@ public class InputManager : MonoBehaviour
             .Subscribe(_ => Ready());
         mouseRightUpStream
             .Subscribe(_ => ReadyCancel());
-
-        targetPinStream.Subscribe(_ => PinTarget());
     }
 
 
@@ -59,29 +62,28 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Attack()
     {
-
-        if (_isReady)
+        if (_isReady) // 우클릭 후 공격
         {
             Attack_Ready();
             return;
         }
 
-        if (_isCharge)
+        if (_isCharge) // 차지 공격
         {
             Attack_Charge();
             return;
         }
         else
         {
-            Attack_Normal();
+            Attack_Normal(); // 그냥 공격 - 연속공격 생기면 적용
             return;
         }
     }
-    public virtual void Attack_Normal()
+    public void Attack_Normal()
     {
         DebugManager.ins.Log("일반 공격", DebugManager.TextColor.Yellow);
     }
-    public virtual void Attack_Charge()
+    public void Attack_Charge()
     {
         DebugManager.ins.Log("차지 공격 " + _curChargeTime + "초 차징함", DebugManager.TextColor.Yellow);
     }
@@ -91,7 +93,8 @@ public class InputManager : MonoBehaviour
 
     }
 
-    public virtual void Ready() // 우클릭 동작
+
+    public void Ready() // 우클릭 동작
     {
         DebugManager.ins.Log("준비 자세", DebugManager.TextColor.Red);
         _isReady = true;
@@ -101,7 +104,31 @@ public class InputManager : MonoBehaviour
         DebugManager.ins.Log("준비 취소", DebugManager.TextColor.Red);
         _isReady = false;
     }
-    public virtual void PinTarget()
+
+
+    public void Run()
+    {
+        //DebugManager.ins.Log("Run", DebugManager.TextColor.Red);
+        Animator.WalkValue = 1.0f;
+    }
+    public void RunCancel()
+    {
+        //DebugManager.ins.Log("Run Cancel", DebugManager.TextColor.Red);
+        Animator.WalkValue = 0.0f;
+    }
+
+    public void Jump()
+    {
+        //characterAnimator.Anim_Jump();
+        Animator.Anim_Jump();
+    }
+    public void Roll()
+    {
+        //characterAnimator.Anim_Roll();
+        Animator.Anim_Roll();
+    }
+
+    public void PinTarget()
     {
         if(Character._enemyList.Count >=1 )
         {

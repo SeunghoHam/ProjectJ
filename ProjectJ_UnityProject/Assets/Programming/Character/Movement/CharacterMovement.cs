@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 { 
-    private CharacterController controller;
-    private InputManager InputManager;
+    private CharacterController controller; // 캐릭터 움직임 관련 컴포넌트
+
+    private CharacterAnimator animator;
     //Animator anim;
     
     float _speedSmoothVelocity = 1f;
@@ -20,7 +21,7 @@ public class CharacterMovement : MonoBehaviour
 
     // Movement
     [SerializeField] private GameObject _rotateActor;
-    [SerializeField] private Transform _target;
+    [SerializeField] private Transform _targetPoint;
     private float _rotX;
     private float _rotY;
     private float _sensitivity = 5f;
@@ -41,7 +42,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
-
+        animator = Character.Instance.characterAnimator;
         CursurSetting();
     }
 
@@ -61,42 +62,49 @@ public class CharacterMovement : MonoBehaviour
         Cursor.visible = false;
         Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow, 0);
     }
+    private bool _moveStart; // 걷는 애니메이션 시작함
     private void GetInput()
     {
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // 이동 각도 가져오기. normalize 해제하기
-        /*
-        if (direction.x == 0 && direction.z == 0) // 입력이 없는 상태
-        {
-            direction = Vector3.zero;
-        }
-        else // 방향 전달*/
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // 이동 각도 가져오기.
+
+
+        //if (direction.magnitude >= 0.1f) 
+        if (direction.normalized != Vector3.zero)
         {
             // +(조건문 추가) 만약 공격이나 애니메이션 동작중이 아니라면
             if (direction.normalized.z == 1) // 정규화된 움직임(앞으로 가는중)
             {
-                //DebugManager.ins.Log("↑", DebugManager.TextColor.Yellow);
                 _rotateActor.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _yTargetRotation, 0.3f);
             }
             else if (direction.normalized.z == -1)
             {
                 // 카메라 바라보게 뒤로 돌기
-                //DebugManager.ins.Log("↓", DebugManager.TextColor.Yellow);
             }
 
-            if (direction.normalized.x == 1)
+            if (direction.normalized.x == 1) // →
             {
-                //DebugManager.ins.Log("→", DebugManager.TextColor.Blue);
             }
-            else if (direction.normalized.x == -1)
+            else if (direction.normalized.x == -1) // ←
             {
-                //DebugManager.ins.Log("←", DebugManager.TextColor.Blue);                
             }
-
-            // _dir = (forward * _moveInput.y + right * _moveInput.x); // 정규화(normalize) 하면 1 / 0 만 존재하게 되서 딱 딱 끊김
-            // Quaternion을 전달해야 회전이 깔끔하게 됨(EulerAngles불가)
             _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
             controller.Move(_rotateActor.transform.localRotation * direction * _currentSpeed * Time.deltaTime);
+
+            if(!_moveStart)
+            {
+                _moveStart = true;
+                animator.Anim_Move();
+            }
         }
+        else // 입력이 없는 상태(정규화 벡터로 받아와서 클릭 끊기면 바로 적용되게)
+        {
+            if(_moveStart)
+            {
+                _moveStart = false;
+                animator.Anim_Idle();
+            }
+        }
+
         if (_velocityY > -10) _velocityY -= Time.deltaTime * gravity;
     }
 
@@ -110,7 +118,7 @@ public class CharacterMovement : MonoBehaviour
         _yTargetRotation = Quaternion.Euler(0, _rotX, 0); // 좌우회전
         _xTargetRotation = Quaternion.Euler(_rotY, 0, 0); // 상하회전
 
-        _target.transform.localRotation = _yTargetRotation * _xTargetRotation; // 행렬연산이기에 곱연산이 합이된다.
+        _targetPoint.transform.localRotation = _yTargetRotation * _xTargetRotation; // 행렬연산이기에 곱연산이 합이된다.
     }
 
 }
