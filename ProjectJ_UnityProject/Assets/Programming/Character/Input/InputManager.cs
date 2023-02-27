@@ -2,6 +2,7 @@ using System;
 using UniRx.Triggers;
 using UnityEngine;
 using UniRx;
+using System.Diagnostics;
 
 public class InputManager : MonoBehaviour
 {
@@ -13,10 +14,11 @@ public class InputManager : MonoBehaviour
 
     private bool _isCharge; // 차지공격(좌클릭 꾹)
     private bool _isReady; // 우클릭시 준비상태
+
     private void Start()
     {
-        Movement = this.GetComponent<CharacterMovement>();
         Animator = Character.Instance.characterAnimator;
+        Movement = Character.Instance.characterMovement;
         InputSetting();
     }
     private void InputSetting()
@@ -28,10 +30,13 @@ public class InputManager : MonoBehaviour
         var mouseRightUpStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonUp(1));
 
         var targetPinStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Q)).Subscribe(_ => PinTarget());
-        var jumpStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Space)).Subscribe(_=> Jump());
-        var rollStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftControl)).Subscribe(_=> Roll());
-        var runStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftShift)).Subscribe(_=> Run());
+        var jumpStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.F)).Subscribe(_ => Jump());
+        var rollStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Space)).Subscribe(_ => Roll());
+        var runStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftShift)).Subscribe(_ => Run());
         var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift)).Subscribe(_ => RunCancel());
+
+        var itemGetStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ => GetPosition());
+
 
         // 롱클릭
         mouseLeftDownStream
@@ -79,6 +84,7 @@ public class InputManager : MonoBehaviour
             return;
         }
     }
+
     public void Attack_Normal()
     {
         DebugManager.ins.Log("일반 공격", DebugManager.TextColor.Yellow);
@@ -90,10 +96,7 @@ public class InputManager : MonoBehaviour
     public void Attack_Ready()
     {
         DebugManager.ins.Log("우클릭 후 공격", DebugManager.TextColor.Yellow);
-
     }
-
-
     public void Ready() // 우클릭 동작
     {
         DebugManager.ins.Log("준비 자세", DebugManager.TextColor.Red);
@@ -105,7 +108,6 @@ public class InputManager : MonoBehaviour
         _isReady = false;
     }
 
-
     public void Run()
     {
         //DebugManager.ins.Log("Run", DebugManager.TextColor.Red);
@@ -116,27 +118,47 @@ public class InputManager : MonoBehaviour
         //DebugManager.ins.Log("Run Cancel", DebugManager.TextColor.Red);
         Animator.WalkValue = 0.0f;
     }
-
     public void Jump()
     {
-        //characterAnimator.Anim_Jump();
         Animator.Anim_Jump();
     }
     public void Roll()
     {
-        //characterAnimator.Anim_Roll();
-        Animator.Anim_Roll();
+        if(!Animator.IsDoing)
+        {
+            Animator.IsDoing = true;
+            DebugManager.ins.Log("구르기 애니메이션", DebugManager.TextColor.Blue);
+            Animator.Anim_Roll();
+        }
+        else
+            DebugManager.ins.Log("애니메이션 동작중", DebugManager.TextColor.White);
     }
-
+    public void GetPosition()
+    {
+        DebugManager.ins.Log("물약 먹기", DebugManager.TextColor.White);
+    }
     public void PinTarget()
     {
-        if(Character._enemyList.Count >=1 )
+        if (Character._enemyList.Count >= 1)
         {
-            DebugManager.ins.Log("타겟 동작", DebugManager.TextColor.White);
+            if (Movement.IsPin) // Pin 활성화 되어있음
+            {
+                DebugManager.ins.Log("타겟 활성화 해제하기", DebugManager.TextColor.White);
+                Movement.SetPinEnemy(null); // movement의 pinTarget 지우기
+                Movement.IsPin = false;
+            }
+            else // Pikkn 활성화가 안되어있을 때
+            {
+                DebugManager.ins.Log("타겟 활성화 시키기", DebugManager.TextColor.White);
+                Movement.SetPinEnemy(Character.GetEnemy());
+                Movement.IsPin = true;
+            }
+
         }
         else
         {
             DebugManager.ins.Log("리스트 비어서 동작 안함 ㅅㄱ", DebugManager.TextColor.White);
+            Movement.IsPin = false;
         }
     }
 

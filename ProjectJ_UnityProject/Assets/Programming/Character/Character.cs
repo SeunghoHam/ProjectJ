@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
 {
     // PinTarget
     public PinTargetRange pinTargetRange;
+    public CharacterMovement characterMovement;
     public CharacterAnimator characterAnimator;
     public static Character Instance;
     public static List<Enemy> _enemyList = new List<Enemy>();
@@ -13,6 +14,10 @@ public class Character : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+    public static Enemy GetEnemy()
+    {
+        return _enemyList[0];
     }
     public static Enemy AddEnemy(Enemy enemy)
     {

@@ -1,32 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.XR;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class CharacterAnimator : MonoBehaviour
 {
     private Animator _animator;
     private float _walkValue;
-    private bool _isMove;
+    private bool _isDoing;
+
+    public bool IsDoing
+    {
+        get
+        {
+            return _isDoing;
+        }
+        set
+        {
+            if (_isDoing != value)
+            {
+                Debug.Log("IsDoing 변경 : " + value);
+                _isDoing = value;
+            }
+        }
+    }
     private void Awake()
     {
         _animator = this.GetComponent<Animator>();
     }
-/*
-    public bool IsMove
-    {
-        get { return _isMove; }
-        set
-        {
-            if (_isMove != value)
-            {
-                _isMove = value;
-                Debug.Log("IsMove Value : " + value);
-                _animator.SetBool("isMove", _isMove);
-            }
-        }
-    }*/
     public float WalkValue
     {
         get { return _walkValue; }
@@ -50,8 +50,9 @@ public class CharacterAnimator : MonoBehaviour
     }
     public void Anim_Roll()
     {
-        _animator.SetTrigger("Roll");
+         _animator.SetTrigger("Roll");
     }
+
     public void Anim_Jump()
     {
         _animator.SetTrigger("Jump");
@@ -60,12 +61,10 @@ public class CharacterAnimator : MonoBehaviour
     {
         _animator.SetTrigger("Idle");
     }
-    /*
-    public void Anim_IsMove(bool value)
+
+
+    public void End_Anim_Roll() // 애니메이터 클립에 할당할거
     {
-        if (value)
-            _animator.SetBool("isMove", true);
-        else
-            _animator.SetBool("isMove", false);
-    }*/
+        IsDoing = false;
+    }
 }
