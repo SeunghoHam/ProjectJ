@@ -1,8 +1,10 @@
+using AmplifyShaderEditor;
 using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx.Triggers;
+using Unity.VisualScripting;
 //using System.Numerics;
 using UnityEngine;
 
@@ -18,7 +20,7 @@ public class CharacterMovement : MonoBehaviour
     float _velocityY;
 
     float gravity = 25.0f;
-    float moveSpeed = 5.0f;
+    float moveSpeed = 5.0f; // 5
     float rotateSpeed = 3.0f;
 
     // Movement
@@ -40,7 +42,7 @@ public class CharacterMovement : MonoBehaviour
     private bool _isPin;
     private Enemy _pinEnemy;
     // 핀 후에 다시 상태 돌아갔을 때 값 저장해두기용
-    private Quaternion _saveQuaternion = Quaternion.identity; 
+    private Quaternion _saveQuaternion = Quaternion.identity;
     public bool Attacking
     {
         get { return _isAttacking; }
@@ -57,7 +59,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if (_isPin != value)
             {
-                if(value)
+                if (value)
                 {
 
                 }
@@ -101,35 +103,44 @@ public class CharacterMovement : MonoBehaviour
     {
         if (animator.IsDoing)
             return;
-
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // 이동 각도 가져오기.
-
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         //if (direction.magnitude >= 0.1f) 
         if (direction.normalized != Vector3.zero)
         {
             // +(조건문 추가) 만약 공격이나 애니메이션 동작중이 아니라면
-            if (direction.normalized.z == 1 ) // 정규화된 움직임(앞으로 가는중)
+            if (direction.normalized.z != 0 )
             {
-                _iroha.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _yTargetRotation, 0.3f);
-            }
-            // 카메라 바라보게 뒤로 돌기
-            else if (direction.normalized.z == -1)
-            {
-                
-            }
-            
-            if (direction.normalized.x == 1) // →
-            {
-                _iroha.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _yTargetRotation, 0.3f);
-            }
-            else if (direction.normalized.x == -1) // ←
-            {
+                Quaternion vertical = Quaternion.Euler(0, direction.normalized.y * 90f, 0);
+                Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
 
+                _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
+                   target * vertical, 0.3f);
             }
+
+            if(direction.normalized.x !=0 )
+            {
+                Quaternion horizontal = Quaternion.Euler(0, direction.normalized.x * 90f, 0);
+                Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
+
+                // 키를 누른 방향으로 _iroha의 회전 변경되도록 해야함 이로하만 y 회전 +90
+                // x,z 는 0으로 변환시켜야함
+                _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
+                     target * horizontal, 0.3f);
+            }
+
+
 
             _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
-            controller.Move(_rotateActor.transform.localRotation * direction * _currentSpeed * Time.deltaTime);
-            //controller.Move(this.transform.localRotation * direction * _currentSpeed * Time.deltaTime);
+
+            // 움직일때는 TargetPoint 의 x 회전값은 무시하고 y 회전값만 적용되도록 해야함.
+            // 왜 why x의 회전값이 바뀌면 캐릭터 이동이 하늘로 뜸
+            controller.Move(_yTargetRotation * direction * _currentSpeed * Time.deltaTime);
+            //_iroha.transform.localRotation = Quaternion.Lerp(_iroha.transform.localRotation, _yTargetRotation, 0.1f); // 임시 주석
+            _rotateActor.transform.localRotation = Quaternion.Lerp(_rotateActor.transform.localRotation, _yTargetRotation, 0.2f);
+            //controller.Move(_targetPoint.localRotation * direction * _currentSpeed * Time.deltaTime);
+            //controller.Move(_rotateActor.transform.localRotation * direction * _currentSpeed * Time.deltaTime);
+
+
             if (!_moveStart)
             {
                 _moveStart = true;
@@ -144,20 +155,20 @@ public class CharacterMovement : MonoBehaviour
                 animator.Anim_Idle();
             }
         }
-        if (_velocityY > -10) _velocityY -= Time.deltaTime * gravity;
+        //if (_velocityY > -10) _velocityY -= Time.deltaTime * gravity;
     }
-
     private void MouseRotator()
     {
         Vector2 mouseAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // 십자좌표계
         _rotX += (mouseAxis.x * _sensitivity);
         _rotY += (mouseAxis.y * _sensitivity);
 
-        _rotY = Mathf.Clamp(_rotY, -30f, 30f);
+        _rotY = Mathf.Clamp(_rotY, -40f, 40f); // 상하회전 최대값 제한
         _yTargetRotation = Quaternion.Euler(0, _rotX, 0); // 좌우회전
         _xTargetRotation = Quaternion.Euler(_rotY, 0, 0); // 상하회전
 
         _targetPoint.transform.localRotation = _yTargetRotation * _xTargetRotation; //* _saveQuaternion;
+        // TargetPoint 의 EulerAngles  상태 = ( _rotY,  rotX, 0 );
     }
     public void SetPinEnemy(Enemy enemy)
     {
