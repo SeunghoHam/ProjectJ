@@ -1563,6 +1563,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2712377586721604290, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: _createObject
+      value: 
+      objectReference: {fileID: 112555619234735823, guid: acdee73caf44758439cd511c0617c682,
+        type: 3}
     - target: {fileID: 2717439232205356267, guid: 9aeb0757fe0e9504aa28130e9f31827e,
         type: 3}
       propertyPath: m_RootOrder
@@ -1622,6 +1628,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Iroha_Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740637533893360407, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740637533893360407, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740637533893360407, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740637533893360407, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7740637533893360407, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9aeb0757fe0e9504aa28130e9f31827e, type: 3}

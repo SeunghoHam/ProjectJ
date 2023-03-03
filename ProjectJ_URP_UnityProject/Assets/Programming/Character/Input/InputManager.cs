@@ -2,7 +2,6 @@ using System;
 using UniRx.Triggers;
 using UnityEngine;
 using UniRx;
-using System.Diagnostics;
 
 public class InputManager : MonoBehaviour
 {
@@ -14,7 +13,6 @@ public class InputManager : MonoBehaviour
 
     private bool _isCharge; // 차지공격(좌클릭 꾹)
     private bool _isReady; // 우클릭시 준비상태
-
     private void Start()
     {
         Animator = Character.Instance.characterAnimator;
@@ -127,11 +125,12 @@ public class InputManager : MonoBehaviour
         if(!Animator.IsDoing)
         {
             Animator.IsDoing = true;
-            DebugManager.ins.Log("구르기 애니메이션", DebugManager.TextColor.Blue);
+            //DebugManager.ins.Log("구르기 애니메이션", DebugManager.TextColor.Blue);
             Animator.Anim_Roll();
+            Movement.RollMove();
         }
-        else
-            DebugManager.ins.Log("애니메이션 동작중", DebugManager.TextColor.White);
+        //else
+            //DebugManager.ins.Log("애니메이션 동작중", DebugManager.TextColor.White);
     }
     public void GetPosition()
     {

@@ -18,7 +18,7 @@ public class CharacterAnimator : MonoBehaviour
         {
             if (_isDoing != value)
             {
-                Debug.Log("IsDoing 변경 : " + value);
+                //Debug.Log("IsDoing 변경 : " + value);
                 _isDoing = value;
             }
         }
@@ -34,7 +34,7 @@ public class CharacterAnimator : MonoBehaviour
         {
             if(_walkValue != value)
             {
-                Debug.Log("WalkValue : " + value);
+                //Debug.Log("WalkValue : " + value);
                 _walkValue = value;
                 _animator.SetFloat("WalkBlend", _walkValue);
             }
