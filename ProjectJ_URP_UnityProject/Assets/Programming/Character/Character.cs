@@ -11,6 +11,9 @@ public class Character : MonoBehaviour
     public static Character Instance;
     public static List<Enemy> _enemyList = new List<Enemy>();
 
+    [Space(10)]
+    public Transform TargetPoint;
+
     private void Awake()
     {
         Instance = this;

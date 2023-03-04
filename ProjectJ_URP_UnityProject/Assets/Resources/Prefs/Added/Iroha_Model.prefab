@@ -228,6 +228,7 @@ MonoBehaviour:
   pinTargetRange: {fileID: 1313376460}
   characterMovement: {fileID: 2712377586721604290}
   characterAnimator: {fileID: 5090754049577222407}
+  TargetPoint: {fileID: 42009734}
 --- !u!114 &2712377586721604290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,7 +241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bdd56f6349b81c4db16fe0ed5a8fc5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rotateActor: {fileID: 2022091243}
   _iroha: {fileID: 6928669828478968237}
   _targetPoint: {fileID: 42009734}
 --- !u!114 &1717452277

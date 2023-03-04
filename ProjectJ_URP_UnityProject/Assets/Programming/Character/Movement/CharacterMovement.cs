@@ -1,15 +1,14 @@
+using AmplifyShaderEditor;
 using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Timeline;
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class CharacterMovement : MonoBehaviour
 {
     private CharacterController controller; // 캐릭터 움직임 관련 컴포넌트
-
     private CharacterAnimator animator;
 
     float _speedSmoothVelocity = 1f;
@@ -22,7 +21,7 @@ public class CharacterMovement : MonoBehaviour
     float rotateSpeed = 10.0f;
 
     // Movement
-    [SerializeField] private GameObject _rotateActor; // 회전체
+    // [SerializeField] private GameObject _rotateActor; // 회전체
     [SerializeField] private GameObject _iroha; // 이로하 모델링 및 애니메이터 포함 객체
 
     [SerializeField] private Transform _targetPoint;
@@ -32,8 +31,9 @@ public class CharacterMovement : MonoBehaviour
     private float _rotX;
     private float _rotY;
     private float _sensitivity = 5f;
-    Quaternion _xTargetRotation;
-    Quaternion _yTargetRotation;
+    private Quaternion _xTargetRotation;
+    private Quaternion _yTargetRotation;
+    private Quaternion _saveQuaternion;
 
 
     // Attack
@@ -43,7 +43,7 @@ public class CharacterMovement : MonoBehaviour
     private bool _isPin;
     private Enemy _pinEnemy;
     // 핀 후에 다시 상태 돌아갔을 때 값 저장해두기용
-    private Quaternion _saveQuaternion = Quaternion.identity;
+    
     public bool Attacking
     {
         get { return _isAttacking; }
@@ -67,10 +67,10 @@ public class CharacterMovement : MonoBehaviour
                 else
                 {
                     // 고정이 해제 될 때
-                    DebugManager.ins.Log("Pin 상태 해제", DebugManager.TextColor.Red);
-
+                    //DebugManager.ins.Log("Pin 상태 해제", DebugManager.TextColor.Red);
+                    //_saveQuaternion = _targetPoint.localRotation;
                 }
-                _isPin = value;
+                _isPin = value; // 
             }
         }
     }
@@ -79,6 +79,7 @@ public class CharacterMovement : MonoBehaviour
         controller = this.gameObject.GetComponent<CharacterController>();
         animator = Character.Instance.characterAnimator;
         CursurSetting();
+        _saveQuaternion = Quaternion.identity;    
     }
 
 
@@ -91,6 +92,7 @@ public class CharacterMovement : MonoBehaviour
             MouseRotator();
         else
             PinRotator();
+
         //Move();
         //PlayerMovement();
         //PlayerRotation();
@@ -151,49 +153,23 @@ public class CharacterMovement : MonoBehaviour
                 controller.Move(_targetPoint.localRotation * direction * _currentSpeed * Time.deltaTime);
 
 
-                if (direction.normalized.x == 1) // →
-                {
+                Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
+                _iroha.transform.localRotation = target;
 
-                }
-                else if (direction.normalized.x == -1) // ←
-                {
-
-                }
             }
             else // 타겟 고정 비활성화
             {
-                // 캐릭터 회전 좀 더 빠르게 적용되게 해야함
-                if (direction.normalized.z != 0) 
-                {
-                    /*
-                    if (direction.normalized.z == 1) // 앞
-                    {
-                         vertical = Quaternion.identity;
-                          target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
-                    }
-                    else
-                    {
-                        vertical = Quaternion.Euler(0, direction.normalized.z +  180f, 0);
-                        target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
-                    }*/
-                    Quaternion vertical = Quaternion.identity;
-                    Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
-                    _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
-                       target * vertical, rotateSpeed * Time.deltaTime);
 
+                // 키를 누른 방향으로 _iroha의 회전 변경되도록 해야함 이로하만 y 회전 +90
 
-                }
-
-                if (direction.normalized.x != 0)
-                {
-                    Quaternion horizontal = Quaternion.Euler(0, direction.normalized.x * 90f, 0);
-                    Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
-
-                    // 키를 누른 방향으로 _iroha의 회전 변경되도록 해야함 이로하만 y 회전 +90
-                    // x,z 는 0으로 변환시켜야함
-                    _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
-                         target * horizontal, rotateSpeed * Time.deltaTime);
-                }
+                // x,z 는 0으로 변환시켜야함
+                //Debug.Log("z : " + direction.normalized.z);
+                Quaternion horizontal = Quaternion.Euler(0, direction.normalized.x * 90f, 0); // 좌 우 회전
+                //Quaternion vertical = Quaternion.Euler(0, direction.normalized.z * -180f, 0); // 앞 뒤 회전
+                Quaternion vertical = Quaternion.identity;
+                Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0); // 현재 바라보고있는 시점을 기준으로
+                _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
+                       target * horizontal * vertical, rotateSpeed * Time.deltaTime);
 
 
                 // 움직일때는 TargetPoint 의 x 회전값은 무시하고 y 회전값만 적용되도록 해야함.
@@ -201,10 +177,6 @@ public class CharacterMovement : MonoBehaviour
                 _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
                 controller.Move(_yTargetRotation * direction * _currentSpeed * Time.deltaTime);
 
-                //_iroha.transform.localRotation = Quaternion.Lerp(_iroha.transform.localRotation, _yTargetRotation, 0.1f); // 임시 주석
-                _rotateActor.transform.localRotation = Quaternion.Slerp(_rotateActor.transform.localRotation, _yTargetRotation,1f);
-                //controller.Move(_targetPoint.localRotation * direction * _currentSpeed * Time.deltaTime);
-                //controller.Move(_rotateActor.transform.localRotation * direction * _currentSpeed * Time.deltaTime);
                 /*
                 if (!_moveStart)
                 {
@@ -239,7 +211,7 @@ public class CharacterMovement : MonoBehaviour
         _yTargetRotation = Quaternion.Euler(0, _rotX, 0); // 좌우회전
         _xTargetRotation = Quaternion.Euler(_rotY * 0.8f, 0, 0); // 상하회전 : 감도 변경이 필요해보임
 
-        _targetPoint.transform.localRotation = _yTargetRotation * _xTargetRotation;
+        _targetPoint.transform.localRotation = (_yTargetRotation * _xTargetRotation) * _saveQuaternion;
         // TargetPoint 의 EulerAngles  상태 = ( _rotY,  rotX, 0 );
     }
     public void SetPinEnemy(Enemy enemy)
@@ -257,15 +229,14 @@ public class CharacterMovement : MonoBehaviour
     }
     private void PinRotator()
     {
-        Debug.Log("PinRotator");
+        // Debug.Log("PinRotator");
         _targetPoint.transform.DOLookAt(_pinEnemy.PinTargetPoint.position, 0.1f, AxisConstraint.Y
             , null).SetEase(Ease.Linear);
 
         Quaternion yValue = Quaternion.Euler(0, _targetPoint.localEulerAngles.y, 0);
         //_rotateActor.transform.localRotation =
-        _rotateActor.transform.localRotation = Quaternion.Slerp(_rotateActor.transform.localRotation, yValue, 1f);
+        _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation, yValue, 1f);
 
-        //_saveQuaternion = _targetPoint.localRotation;
         // MouseRotator에서 저장된 Quaternion 값이 Pin 취소되었을 때 돌아가면서 문제가 생김.
         //saveValue 
     }
