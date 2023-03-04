@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Water_Test
+  m_Name: Ripple_Water
   m_Shader: {fileID: 4800000, guid: 3e1598c41d6438645aee7f9f7a483992, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -45,7 +45,7 @@ Material:
     - _AlphaCutoff: 0.5
     - _Color_Opacity: 0
     - _Color_Top_Opacity: 0
-    - _Depth: 0.5
+    - _Depth: 1
     - _Edge_Distance: 1
     - _Edge_Power: 0.3
     - _Form_Distance: 0.32
@@ -53,24 +53,24 @@ Material:
     - _Form_Power: 0.392
     - _Form_Tile: 5
     - _Form_Tile1: 1
-    - _Normal_Speed: 0.01
-    - _Normal_Strngth: 0.21
-    - _Normal_Tile: 1.01
+    - _Normal_Speed: 0.03
+    - _Normal_Strngth: 0.2
+    - _Normal_Tile: 0.35
     - _Refract: 0.03
-    - _Smoothness: 1
+    - _Smoothness: 0.89
     - _TessMax: 18
     - _TessMin: 10
     - _TessPhongStrength: 0.379
     - _TessValue: 5
-    - _Waves_Form_Tile: 10
-    - _Waves_Height: 0.1
-    - _Waves_Speed: 0.35
-    - _Waves_Tile: 38.92
+    - _Waves_Form_Tile: 3
+    - _Waves_Height: 0.05
+    - _Waves_Speed: 0.4
+    - _Waves_Tile: 10
     m_Colors:
     - _Color: {r: 0.3571111, g: 0.5515907, b: 0.7075472, a: 1}
     - _Color_Top: {r: 0.5613208, g: 0.8558186, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Normal1_Direction: {r: 1, g: 0.5, b: 0, a: 0}
-    - _Normal2_Direction: {r: -1, g: -0.5, b: 0, a: 0}
+    - _Normal1_Direction: {r: 0.5, g: 1, b: 0, a: 0}
+    - _Normal2_Direction: {r: -0.5, g: -1, b: 0, a: 0}
     - _Waves_Stretch: {r: 0.2, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []
