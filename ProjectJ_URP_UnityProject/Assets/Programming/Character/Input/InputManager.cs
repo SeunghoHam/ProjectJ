@@ -118,13 +118,22 @@ public class InputManager : MonoBehaviour
     }
     public void Jump()
     {
-        Animator.Anim_Jump();
+        if(Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//|| !Animator.IsJumping)
+        {
+            Animator.AnimState = CharacterAnimator.ChaAnimState.Doing;
+            Animator.IsJumping = true;
+            Animator.Anim_Jump();
+            Movement.Jump();
+            // 점프를 합니당~
+        }
+        
     }
     public void Roll()
     {
-        if(!Animator.IsDoing)
+        if(Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//) &&!Animator.IsRolling)
         {
-            Animator.IsDoing = true;
+            Animator.AnimState = CharacterAnimator.ChaAnimState.Doing;
+            Animator.IsRolling = true;
             //DebugManager.ins.Log("구르기 애니메이션", DebugManager.TextColor.Blue);
             Animator.Anim_Roll();
             Movement.RollMove();

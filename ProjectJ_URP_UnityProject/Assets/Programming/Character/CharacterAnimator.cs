@@ -6,23 +6,45 @@ public class CharacterAnimator : MonoBehaviour
 {
     private Animator _animator;
     private float _walkValue;
-    private bool _isDoing;
 
-    public bool IsDoing
+    // 구르기동안은 input을 받으면 안되고, 점프중일때는 이동속도 감소만 해야되니까 다른 변수로 할당함
+    private bool _isRolling;
+    private bool _isJumping;
+    
+
+    public enum ChaAnimState
+    { 
+        Idle, // 동작 가능 상태
+        Doing, // 머라도 동작이잇음
+    }
+    public ChaAnimState AnimState;
+
+    public bool IsRolling
     {
         get
         {
-            return _isDoing;
+            return _isRolling;
         }
         set
         {
-            if (_isDoing != value)
+            if (_isRolling != value)
             {
                 //Debug.Log("IsDoing 변경 : " + value);
-                _isDoing = value;
+                _isRolling = value;
             }
         }
     }
+    public bool IsJumping
+    {
+        get {return _isJumping;}
+        set
+        {
+            if (_isJumping != value)
+                _isJumping = value;
+        }
+    }
+
+
     private void Awake()
     {
         _animator = this.GetComponent<Animator>();
@@ -65,6 +87,13 @@ public class CharacterAnimator : MonoBehaviour
 
     public void End_Anim_Roll() // 애니메이터 클립에 할당할거
     {
-        IsDoing = false;
+        AnimState = ChaAnimState.Idle;
+        IsRolling = false;
     }
+    public void End_Anim_Jump()
+    {
+        AnimState = ChaAnimState.Idle;
+        IsJumping = false;
+    }
+
 }
