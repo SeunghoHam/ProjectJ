@@ -24,6 +24,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 83141f65ed9d3214186a21b865990e62, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Highlight_Tex:
+        m_Texture: {fileID: 2800000, guid: 83141f65ed9d3214186a21b865990e62, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Normal:
         m_Texture: {fileID: 2800000, guid: f00b4b518f7745b44821b20c5ffbd674, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -36,6 +40,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: f00b4b518f7745b44821b20c5ffbd674, type: 3}
         m_Scale: {x: 2, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Waves_Form_Tex:
+        m_Texture: {fileID: 2800000, guid: 83141f65ed9d3214186a21b865990e62, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -45,32 +53,39 @@ Material:
     - _AlphaCutoff: 0.5
     - _Color_Opacity: 0
     - _Color_Top_Opacity: 0
-    - _Depth: 0.5
+    - _Depth: 0.3
     - _Edge_Distance: 1
+    - _Edge_Form_Distance: 0.2
+    - _Edge_Form_Power: 1
     - _Edge_Power: 0.3
     - _Form_Distance: 0.32
     - _Form_Mask: 0.03
     - _Form_Power: 0.392
     - _Form_Tile: 5
     - _Form_Tile1: 1
+    - _Highlight_Tile: 0.44
     - _Normal_Speed: 0.01
     - _Normal_Strngth: 0.21
-    - _Normal_Tile: 1.01
+    - _Normal_Tile: 0.7
     - _Refract: 0.03
-    - _Smoothness: 1
-    - _TessMax: 18
-    - _TessMin: 10
+    - _Smoothness: 0.85
+    - _TessMax: 5
+    - _TessMin: 1
     - _TessPhongStrength: 0.379
-    - _TessValue: 5
-    - _Waves_Form_Tile: 10
+    - _TessValue: 2.8
+    - _Waves_Form_Tile: 1.46
     - _Waves_Height: 0.1
     - _Waves_Speed: 0.35
     - _Waves_Tile: 38.92
     m_Colors:
-    - _Color: {r: 0.3571111, g: 0.5515907, b: 0.7075472, a: 1}
-    - _Color_Top: {r: 0.5613208, g: 0.8558186, b: 1, a: 1}
+    - _Color: {r: 0.35686275, g: 0.6351773, b: 0.7058824, a: 1}
+    - _Color_HighlightUseWavesAlpha: {r: 2.607511, g: 7.468417, b: 8.250633, a: 0}
+    - _Color_Top: {r: 0.54059607, g: 0.8241255, b: 0.964, a: 1}
+    - _Edge_Form_Color: {r: 0.8330811, g: 0.85785204, b: 0.9150943, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _High_C: {r: 2.6075113, g: 7.4684167, b: 8.250633, a: 0}
+    - _Highlight_Color: {r: 0, g: 0, b: 0, a: 0}
     - _Normal1_Direction: {r: 1, g: 0.5, b: 0, a: 0}
     - _Normal2_Direction: {r: -1, g: -0.5, b: 0, a: 0}
-    - _Waves_Stretch: {r: 0.2, g: 0.1, b: 0, a: 0}
+    - _Waves_Stretch: {r: 0.2, g: 0.05, b: 0, a: 0}
   m_BuildTextureStacks: []
