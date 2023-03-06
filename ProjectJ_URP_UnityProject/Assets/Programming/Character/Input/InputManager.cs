@@ -2,6 +2,9 @@ using System;
 using UniRx.Triggers;
 using UnityEngine;
 using UniRx;
+using Unity.VisualScripting;
+using System.Collections;
+using UnityEditor.Experimental.GraphView;
 
 public class InputManager : MonoBehaviour
 {
@@ -13,6 +16,8 @@ public class InputManager : MonoBehaviour
 
     private bool _isCharge; // 차지공격(좌클릭 꾹)
     private bool _isReady; // 우클릭시 준비상태
+
+
     private void Start()
     {
         Animator = Character.Instance.characterAnimator;
@@ -34,7 +39,7 @@ public class InputManager : MonoBehaviour
         var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift)).Subscribe(_ => RunCancel());
 
         var itemGetStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ => GetPosition());
-
+        var changeMdoeStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => ChangeWeaponState());
 
         // 롱클릭
         mouseLeftDownStream
@@ -60,6 +65,22 @@ public class InputManager : MonoBehaviour
     }
 
 
+
+    private void ChangeWeaponState()
+    {
+        if(Character.Instance.weaponState == Character.WeaponState.Normal)
+        {
+            Character.Instance.weaponState = Character.WeaponState.Sword;
+            Animator.IsStateChnaging = true;
+            //Animator.animator.layer
+        }
+        else
+        {
+            Character.Instance.weaponState = Character.WeaponState.Normal;
+            Animator.IsStateChnaging = true;
+        }
+        DebugManager.ins.Log("현재 weaponMode 는 " + Character.Instance.weaponState.ToString(), DebugManager.TextColor.Blue);
+    }
     /// <summary>
     /// Attack으로 하나 묶어서 해버리는게 손해인가?
     /// </summary>
@@ -85,7 +106,13 @@ public class InputManager : MonoBehaviour
 
     public void Attack_Normal()
     {
-        DebugManager.ins.Log("일반 공격", DebugManager.TextColor.Yellow);
+        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//|| !Animator.IsJumping)
+        {
+            Animator.AnimState = CharacterAnimator.ChaAnimState.Doing;
+            Animator.IsAttacking = true;
+            DebugManager.ins.Log("일반 공격", DebugManager.TextColor.Yellow);
+            Animator.Anim_Sword_Slash();
+        }
     }
     public void Attack_Charge()
     {

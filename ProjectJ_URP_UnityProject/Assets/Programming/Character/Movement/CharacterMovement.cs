@@ -1,9 +1,7 @@
-using AmplifyImpostors;
 using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
@@ -11,7 +9,6 @@ public class CharacterMovement : MonoBehaviour
     private CharacterController controller; // 캐릭터 움직임 관련 컴포넌트
     private CharacterAnimator animator;
 
-    private Rigidbody rigidbody;
     float _speedSmoothVelocity = 0.5f; // default 1
     float _speedSmoothTime = 1f;
     float _currentSpeed = 2.5f;
@@ -88,8 +85,6 @@ public class CharacterMovement : MonoBehaviour
         CursurSetting();
         _saveQuaternion = Quaternion.identity;
 
-        rigidbody = this.GetComponent<Rigidbody>();
-        //rigidbody.useGravity = false;
     }
 
     private void Update()
@@ -159,8 +154,13 @@ public class CharacterMovement : MonoBehaviour
         // +(조건문 추가) 만약 공격이나 애니메이션 동작중이 아니라면
         //if (animator.IsRolling)
         //if(animator.AnimState != CharacterAnimator.ChaAnimState.Idle)
-        if (animator.IsRolling) // 구르기중
+        if (animator.IsRolling || animator.IsAttacking) // 이동 불가 상태에서
+        {
+            _currentSpeed = 0f;
             return;
+        }
+        _currentSpeed = 2.5f;
+
 
         direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // y 값에 현재 위치 할당해보기
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
@@ -168,7 +168,9 @@ public class CharacterMovement : MonoBehaviour
         // if (direction != Vector3.zero)
         if (input != Vector2.zero)
         {
-            Debug.Log("입력이 있음");
+            // 동작이 있는 경우에 Aniamtor의 WalkValue를 0 초과로 만들어야함
+            animator.Anim_GetDirection(input.x, input.y);
+            animator.Anim_WalkValue(1);
             if (_isPin) // 타겟 고정 활성화
             {
                 if (animator.IsJumping)
@@ -188,7 +190,9 @@ public class CharacterMovement : MonoBehaviour
                 Quaternion horizontal = Quaternion.Euler(0, direction.normalized.x * 90f, 0); // 좌 우 회전
                 //Quaternion vertical = Quaternion.Euler(0, direction.normalized.z * -180f, 0); // 앞 뒤 회전
                 Quaternion vertical = Quaternion.identity;
-
+                
+                // 이거
+                
                 Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0); // 현재 바라보고있는 시점을 기준으로
                 _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
                        target * horizontal * vertical, rotateSpeed * Time.deltaTime);
@@ -196,12 +200,6 @@ public class CharacterMovement : MonoBehaviour
 
                 // 움직일때는 TargetPoint 의 x 회전값은 무시하고 y 회전값만 적용되도록 해야함.
                 // 왜 why x의 회전값이 바뀌면 캐릭터 이동이 하늘로 뜸
-                /*
-                if(animator.IsJumping)
-                    _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
-                else
-                    _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed * 0.5f, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);*/
-
                 //_currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
 
                 controller.Move(_yTargetRotation * direction * _currentSpeed * Time.deltaTime);
@@ -218,6 +216,8 @@ public class CharacterMovement : MonoBehaviour
         }
         else // 입력이 없는 상태(정규화 벡터로 받아와서 클릭 끊기면 바로 적용되게)
         {
+            animator.Anim_GetDirection(0,0);
+            animator.Anim_WalkValue(0);
             //Debug.Log("노멀라이즈 false");
             /*
             if (_moveStart)
@@ -245,7 +245,9 @@ public class CharacterMovement : MonoBehaviour
             controller.Move(_jumpDir * Time.deltaTime);
 
         //if(animator.IsRolling)
-            
+     
+        // 애니메이션 관련
+        
     }
     private void MouseRotator()
     {

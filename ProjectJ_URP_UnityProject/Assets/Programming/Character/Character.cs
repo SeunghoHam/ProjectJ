@@ -11,6 +11,14 @@ public class Character : MonoBehaviour
     public static Character Instance;
     public static List<Enemy> _enemyList = new List<Enemy>();
 
+    // CharacterState : Normal / Sword
+    public enum WeaponState
+    { 
+        Normal,
+        Sword,
+    }
+    public WeaponState weaponState = WeaponState.Normal;
+
     [Space(10)]
     public Transform TargetPoint;
 
