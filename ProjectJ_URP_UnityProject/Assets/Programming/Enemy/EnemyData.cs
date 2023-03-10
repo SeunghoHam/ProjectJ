@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Enemy")]
-public class EnemyInfo : ScriptableObject
+public class EnemyData : ScriptableObject
 {
     public string _name;
     public Rare _rare;

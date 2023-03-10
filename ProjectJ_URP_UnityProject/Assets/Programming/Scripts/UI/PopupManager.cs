@@ -6,7 +6,6 @@ using UniRx;
 using System;
 using System.Threading;
 using System.Linq;
-using Unity.VisualScripting;
 
 namespace Assets.Scripts.UI
 {
@@ -99,6 +98,7 @@ namespace Assets.Scripts.UI
         private IEnumerator Show<T>(IObserver<T> observer, CancellationToken token, PopupStyle style, object[] data) where T: PopupBase 
         {
             yield return Get<T>(token, style);
+
             PopupBase popupBase = PopupList[0];
 
             popupBase.SetParent(transform);

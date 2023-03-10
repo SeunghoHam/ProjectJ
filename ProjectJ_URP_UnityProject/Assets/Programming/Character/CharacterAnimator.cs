@@ -1,7 +1,7 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
@@ -19,10 +19,14 @@ public class CharacterAnimator : MonoBehaviour
     {
         get { return _animator; }
     }
+
+    // 이동 및 다른 모션 가능한 거 ->  MultiMoveAnim (걷기랑 겹치면 안되긴함)
+    // 불가 -> OnlyThisAnim
     public enum ChaAnimState
     {
         Idle, // 동작 가능 상태
-        Doing, // 머라도 동작이잇음
+        MultiAnim, // 점프, 
+        OnlyThisAnim, // 공격, 구르기
     }
 
     public ChaAnimState AnimState;
@@ -68,45 +72,9 @@ public class CharacterAnimator : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (_isStateChnaging)
-        {
-            if (Character.Instance.weaponState == Character.WeaponState.Normal)
-            {
-                ValueChange(1, 1);
-                ValueChange(2, 0);
-            }
-            else
-            {
-                ValueChange(1, 0);
-                ValueChange(2, 1);
-            }
-        }
-    }
-    public void ValueChange(int index, float destValue) // 레이어 인덱스 , 목적값
-    {
-        /*
-        destValue = Mathf.SmoothDamp
-            (_animator.GetLayerWeight(index),
-            destValue, ref refValue, smoothTime * Time.deltaTime);
-        */
-        _animator.SetLayerWeight(index,
-            Mathf.Lerp(_animator.GetLayerWeight(0), destValue, 2f* Time.deltaTime));
-
-        if (Mathf.Approximately( Mathf.Round(_animator.GetLayerWeight(index)), destValue))
-        {
-            IsStateChnaging = false;
-            Debug.Log("스테이트 변경 끝");
-        }
-    }
     public void Anim_Move()
     {
         _animator.SetTrigger("Move");
-    }
-    public void Anim_Move_Direction(float value)
-    {
-        _animator.SetFloat("Directino", value);
     }
     public void Anim_Roll()
     {
@@ -129,8 +97,7 @@ public class CharacterAnimator : MonoBehaviour
     }
     public void Anim_WalkValue(float walkValue)
     {
-        animator.SetFloat("WalkValue",walkValue);
-
+        animator.SetFloat("WalkValue", walkValue);
     }
 
 
@@ -151,24 +118,24 @@ public class CharacterAnimator : MonoBehaviour
     {
 
     }
-
     #endregion
 
 
     public void End_Anim_Roll() // 애니메이터 클립에 할당할거
     {
-        AnimState = ChaAnimState.Idle;
         IsRolling = false;
+        AnimState = ChaAnimState.Idle;
     }
     public void End_Anim_Jump()
     {
-        AnimState = ChaAnimState.Idle;
         IsJumping = false;
+        AnimState = ChaAnimState.Idle;
     }
 
     public void End_Anim_Slash()
     {
-        AnimState = ChaAnimState.Idle;
         IsAttacking = false;
+        AnimState = ChaAnimState.Idle;
+        DebugManager.ins.Log("EndSlash");
     }
 }

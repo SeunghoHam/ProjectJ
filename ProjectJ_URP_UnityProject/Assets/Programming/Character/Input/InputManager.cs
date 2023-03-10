@@ -5,6 +5,8 @@ using UniRx;
 using Unity.VisualScripting;
 using System.Collections;
 using UnityEditor.Experimental.GraphView;
+using Assets.Scripts.Manager;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
@@ -106,14 +108,26 @@ public class InputManager : MonoBehaviour
 
     public void Attack_Normal()
     {
-        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//|| !Animator.IsJumping)
+        if (Animator.AnimState != CharacterAnimator.ChaAnimState.OnlyThisAnim)//|| !Animator.IsJumping)
         {
-            Animator.AnimState = CharacterAnimator.ChaAnimState.Doing;
+            if (BattleManager.GetEnemy().Count > 0)
+            {
+                for (int i = 0; i < BattleManager.GetEnemy().Count; i++)
+                {
+                    BattleManager.GetEnemy()[i].Damaged(1);
+                }
+            }
+            Animator.AnimState = CharacterAnimator.ChaAnimState.OnlyThisAnim;
             Animator.IsAttacking = true;
             DebugManager.ins.Log("일반 공격", DebugManager.TextColor.Yellow);
             Animator.Anim_Sword_Slash();
         }
     }
+    public void Attack_Normal2()
+    {
+        // 연속공격
+    }
+
     public void Attack_Charge()
     {
         DebugManager.ins.Log("차지 공격 " + _curChargeTime + "초 차징함", DebugManager.TextColor.Yellow);
@@ -145,21 +159,20 @@ public class InputManager : MonoBehaviour
     }
     public void Jump()
     {
-        if(Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//|| !Animator.IsJumping)
+        if(Animator.AnimState != CharacterAnimator.ChaAnimState.OnlyThisAnim)//|| !Animator.IsJumping)
         {
-            Animator.AnimState = CharacterAnimator.ChaAnimState.Doing;
+            Animator.AnimState = CharacterAnimator.ChaAnimState.MultiAnim;
             Animator.IsJumping = true;
             Animator.Anim_Jump();
             Movement.Jump();
             // 점프를 합니당~
         }
-        
     }
     public void Roll()
     {
-        if(Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//) &&!Animator.IsRolling)
+        if(Animator.AnimState != CharacterAnimator.ChaAnimState.OnlyThisAnim)//) &&!Animator.IsRolling)
         {
-            Animator.AnimState = CharacterAnimator.ChaAnimState.Doing;
+            Animator.AnimState = CharacterAnimator.ChaAnimState.OnlyThisAnim;
             Animator.IsRolling = true;
             //DebugManager.ins.Log("구르기 애니메이션", DebugManager.TextColor.Blue);
             Animator.Anim_Roll();
@@ -172,8 +185,10 @@ public class InputManager : MonoBehaviour
     {
         DebugManager.ins.Log("물약 먹기", DebugManager.TextColor.White);
     }
+    
     public void PinTarget()
     {
+        /*
         if (Character._enemyList.Count >= 1)
         {
             if (Movement.IsPin) // Pin 활성화 되어있음
@@ -188,14 +203,11 @@ public class InputManager : MonoBehaviour
                 Movement.SetPinEnemy(Character.GetEnemy());
                 Movement.IsPin = true;
             }
-
         }
         else
         {
             DebugManager.ins.Log("리스트 비어서 동작 안함 ㅅㄱ", DebugManager.TextColor.White);
             Movement.IsPin = false;
-        }
+        }*/
     }
-
-
 }

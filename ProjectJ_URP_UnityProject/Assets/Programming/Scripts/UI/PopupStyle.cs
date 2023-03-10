@@ -4,7 +4,7 @@ namespace Assets.Scripts.UI
     {
         None = 0,
         Test,
-        Splash,
-        Main,
+        Pause,
+        Inventory,
     }
 }

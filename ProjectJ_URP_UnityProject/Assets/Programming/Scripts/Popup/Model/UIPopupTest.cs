@@ -6,7 +6,6 @@ using Assets.Scripts.Common.DI;
 using UnityEngine;
 using Assets.Scripts.UI.Popup.PopupView;
 using Assets.Scripts.MangeObject;
-using Unity.VisualScripting;
 
 namespace Assets.Scripts.UI.Popup.Base
 {

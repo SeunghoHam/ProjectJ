@@ -8,7 +8,7 @@ public class PinTargetRange : MonoBehaviour
     {
         if (!other.CompareTag("Enemy"))
             return;
-        Character.AddEnemy(other.GetComponent<Enemy>());
+        //Character.AddEnemy(other.GetComponent<Enemy>());
             
     }
 
@@ -16,6 +16,6 @@ public class PinTargetRange : MonoBehaviour
     {
         if (!other.CompareTag("Enemy"))
             return;
-        Character.RemoveEnemy(other.GetComponent<Enemy>());
+        //Character.RemoveEnemy(other.GetComponent<Enemy>());
     }
 }

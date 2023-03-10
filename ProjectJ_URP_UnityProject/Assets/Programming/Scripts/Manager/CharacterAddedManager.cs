@@ -24,5 +24,7 @@ public class CharacterAddedManager : MonoBehaviour
         character.transform.position = _createPos.position;
         cam.transform.parent = transform;
         manager.transform.parent = transform;
+
+        Character.Instance.cameraSystem = cam.GetComponent<CameraSystem>();
     }
 }

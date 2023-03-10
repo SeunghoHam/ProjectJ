@@ -17,6 +17,9 @@ namespace Assets.Scripts.MangeObject
         public static PopupManager PopupManager
         { get { return PopupManager.Instance; } }
 
+        public static BattleManager BattleManager
+        { get { return BattleManager.Instance; } }
+
         public static void Initialize()
         {
             if (_isInitialize)
@@ -25,6 +28,7 @@ namespace Assets.Scripts.MangeObject
             _isInitialize = true;
             FlowManager.Initialize();
             PopupManager.Initialize();
+            BattleManager.Initialize();
         }
 
         public static IObservable<Unit> UnInitialize()
