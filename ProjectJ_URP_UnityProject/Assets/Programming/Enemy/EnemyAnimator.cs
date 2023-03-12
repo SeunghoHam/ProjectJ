@@ -21,8 +21,16 @@ public class EnemyAnimator : MonoBehaviour
     }
     public EnemyAnimState AnimState;
 
+    public void Anim_Jump()
+    {
+        _animator.SetTrigger("Jump");
+    }
     public void Anim_Death()
     {
-        _animator.SetTrigger("Death1");
+        _animator.SetTrigger("Death");
+    }
+    public void Anim_Slash()
+    {
+        _animator.SetTrigger("Attack");
     }
 }

@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using Assets.Scripts.Common.DI;
 using UnityEngine;
 using Assets.Scripts.UI.Popup.PopupView;
-using Assets.Scripts.MangeObject;
 
 namespace Assets.Scripts.UI.Popup.Base
 {
-    public class UIPopupTest : PopupBase
+    public class UIPopupBasic : PopupBase
     {
         [DependuncyInjection(typeof(FlowManager))]
         private FlowManager _flowManager;
@@ -17,15 +16,15 @@ namespace Assets.Scripts.UI.Popup.Base
         [DependuncyInjection(typeof(ResourcesManager))]
         private ResourcesManager _resourcesManager;
 
-        [SerializeField] private TestView _testView;
+        [SerializeField] private BasicView _basicView;
 
         public override void Initialize()
         {
             base.Initialize();
             DependuncyInjection.Inject(this);
 
-            _testView.FlowManager = _flowManager;
-            _testView.ResourcesManager = _resourcesManager;
+            _basicView.FlowManager = _flowManager;
+            _basicView.ResourcesManager = _resourcesManager;
         }
 
         public override void Show(params object[] data)

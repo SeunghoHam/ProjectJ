@@ -31284,6 +31284,13 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.5
+    functionName: Jump_GravityActive
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.2
     functionName: End_Anim_Jump
     data: 
     objectReferenceParameter: {fileID: 0}

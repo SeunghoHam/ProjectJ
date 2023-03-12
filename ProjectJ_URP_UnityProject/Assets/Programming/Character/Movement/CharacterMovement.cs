@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
@@ -10,18 +11,15 @@ public class CharacterMovement : MonoBehaviour
     private CharacterAnimator animator;
     private CameraSystem cameraSystem;
 
-
     float _speedSmoothVelocity = 0.5f; // default 1
     float _speedSmoothTime = 1f;
     float _currentSpeed = 2.5f;
     float _velocityY;
 
-    //float gravity = 25.0f;
     float moveSpeed = 5.0f; // 5
     float rotateSpeed = 10.0f;
 
     // Movement
-    // [SerializeField] private GameObject _rotateActor; // 회전체
     [SerializeField] private GameObject _iroha; // 이로하 모델링 및 애니메이터 포함 객체
 
     [SerializeField] private Transform _targetPoint;
@@ -84,7 +82,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
-        
+
         animator = Character.Instance.characterAnimator;
         cameraSystem = Character.Instance.cameraSystem;
         CursurSetting();
@@ -97,7 +95,7 @@ public class CharacterMovement : MonoBehaviour
         AboutRoll();
         GetInput();
         Movement();
-        
+
         if (!_isPin)
             MouseRotator();
         else
@@ -117,7 +115,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void GetInput()
     {
-        if (animator.AnimState == CharacterAnimator.ChaAnimState.OnlyThisAnim) // 이동 불가 상태에서
+        if (animator.AnimState == CharacterAnimator.ChaAnimState.Roll) // 이동 불가 상태에서
         {
             //DebugManager.ins.Log("동작중이라서 움직임 불가", DebugManager.TextColor.Red);
             _currentSpeed = 0f;
@@ -166,15 +164,18 @@ public class CharacterMovement : MonoBehaviour
 
     private void Movement()
     {
-        controller.Move(_yTargetRotation // 마우스 회전(targetPoint)
+        if (animator.ReturnCanMove())
+        {
+            controller.Move(_yTargetRotation // 마우스 회전(targetPoint)
             * direction // 바라보는 방향
             * _currentSpeed // 현재 속도
             * Time.deltaTime);
 
-        //if(animator.IsJumping)
-            controller.Move(_jumpDir * Time.deltaTime);
 
-        //if(animator.IsRolling)
+            // 점프 정의
+            controller.Move(_jumpDir * Time.deltaTime);
+        }
+
         // 애니메이션 관련
         _walkValue = Mathf.Abs(direction.x + direction.z); // 어떤 방향이든 입력이 있다면 0 초과로 나옴
         animator.Anim_GetDirection(direction.x, direction.z);
@@ -185,7 +186,7 @@ public class CharacterMovement : MonoBehaviour
         mouseAxis.x = Input.GetAxis("Mouse X");
         mouseAxis.y = Input.GetAxis("Mouse Y");
         //= new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // 십자좌표계
-        
+
         _rotX += (mouseAxis.x * _sensitivity);
         _rotY += (mouseAxis.y * _sensitivity);
 
@@ -245,7 +246,7 @@ public class CharacterMovement : MonoBehaviour
     private float _rollSpeed = 2f;
     private void AboutRoll()
     {
-        if(animator.IsRolling) // 구르기중
+        if (animator.IsRolling) // 구르기중
         {
             //controller.Move(_rollDir * Time.deltaTime);
             controller.Move(_rollDir * _rollSpeed * Time.deltaTime);
@@ -266,8 +267,21 @@ public class CharacterMovement : MonoBehaviour
         DebugManager.ins.Log("점프", DebugManager.TextColor.Blue);
         _jumpDir = controller.transform.TransformDirection(_jumpDir); // 로컬벡터를 월드벡터로 변환시킴
     }
+    private bool JumpProperty
+    {
+        get { return controller.isGrounded; }
+        set
+        {
+            if (controller.isGrounded != value)
+            {
+                
+            }
+        }
+    }
     private void AboutJump()
     {
+        JumpProperty = controller.isGrounded;
+
         if (controller.isGrounded)
         {
             //_moveDir.y = _jumpHeight;
@@ -277,7 +291,7 @@ public class CharacterMovement : MonoBehaviour
         {
             _jumpDir.y -= _gravityScale * Time.deltaTime;
         }
-        if(animator.IsJumping) // 점프중일 때 상승하도록
+        if (animator.IsJumping) // 점프중일 때 상승하도록
         {
             //_jumpDir.y = Mathf.Lerp(_jumpDir.y, _jumpHeight, _jumpLinearValue * Time.deltaTime);
             _jumpDir.y = _jumpHeight;

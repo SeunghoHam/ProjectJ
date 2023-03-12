@@ -16,6 +16,6 @@ public class TestScene : MonoBehaviour
     {
         DependuncyInjection.Inject(this);
         ManageObjectFacade.Initialize();
-        FlowManager.Instance.AddSubPopup(PopupStyle.Test);
+        FlowManager.Instance.AddSubPopup(PopupStyle.Basic);
     }
 }

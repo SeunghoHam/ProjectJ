@@ -5,15 +5,31 @@ using UnityEngine.UI;
 
 public class Enemy : UnitBase
 {
+    // 캐릭터 및 데이터 정보 받아오기
     public EnemyData _data; // ScriptAble데이터로 저장된 정보 가져오기
-
     public EnemyAnimator enemyAnimator;
+    public EnemyMovement enemyMovement;
+
+
+    [Header("플레이어 시점 고정")]
     [SerializeField] private Transform _pinTarget;
     [SerializeField] private Image _pinImage;
 
 
-    private int _hp;
+    [Space(10)]
+    [Header("보스 상황")]
+    [SerializeField] private int _hp;
 
+    private bool _canAvoid = false;
+    public bool CanAvoid
+    {
+        get { return _canAvoid; }
+        set
+        {
+            if (_canAvoid != value)
+                _canAvoid = value;
+        }
+    }
     private void Awake()
     {
         EnemyInitilaize();
@@ -21,8 +37,10 @@ public class Enemy : UnitBase
 
     private void EnemyInitilaize()
     {
+        enemyMovement.Initialize(enemyAnimator);
         _pinImage.gameObject.SetActive(false);
         _hp = _data._hp;
+
     }
     private void Update()
     {
@@ -31,6 +49,10 @@ public class Enemy : UnitBase
     }
 
     #region Battle
+    public override void Attack()
+    {
+        base.Attack();
+    }
     public override void Damaged(int damage)
     {
         base.Damaged(damage);
@@ -41,10 +63,16 @@ public class Enemy : UnitBase
             Debug.Log("적이 주거써");
             enemyAnimator.Anim_Death();
         }
-        else return;
+        //else return;
     }
-
+    public override void Avoid()
+    {
+        base.Avoid();
+        enemyMovement.Avoid();
+    }
     #endregion
+
+
     #region TargetPin
     public void Targeting(bool value) // 타겟설정됨
     {

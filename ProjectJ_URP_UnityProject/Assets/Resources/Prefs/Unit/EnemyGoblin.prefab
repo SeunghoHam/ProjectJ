@@ -10,11 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7582792416932930459}
   - component: {fileID: 5221965309256867961}
+  - component: {fileID: 1408514555483553872}
   - component: {fileID: 5221965309256867962}
   - component: {fileID: 5221965309256867963}
   m_Layer: 0
   m_Name: EnemyGoblin
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,8 +52,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data: {fileID: 11400000, guid: 81aa450735928ee4988f14a66727fe0c, type: 2}
   enemyAnimator: {fileID: 4162323631564900774}
+  enemyMovement: {fileID: 1408514555483553872}
   _pinTarget: {fileID: 4162323631279705547}
   _pinImage: {fileID: 4162323632099041411}
+  _hp: 0
+--- !u!114 &1408514555483553872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3350096620261014233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 119ed41e72d5d44449a72fdd592fbeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
 --- !u!54 &5221965309256867962
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -965,7 +981,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4162323631930016240}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -974,7 +990,7 @@ Transform:
   - {fileID: 4162323630689359800}
   m_Father: {fileID: 7582792416932930459}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!95 &3257537851668212417
 Animator:
   serializedVersion: 5
