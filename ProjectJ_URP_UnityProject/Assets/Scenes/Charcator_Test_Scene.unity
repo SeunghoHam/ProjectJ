@@ -21,7 +21,7 @@ RenderSettings:
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
-  m_AmbientEquatorColor: {r: 0.319, g: 0.319, b: 0.319, a: 1}
+  m_AmbientEquatorColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
   m_AmbientGroundColor: {r: 0.496351, g: 0.735849, b: 0.6640642, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 1
@@ -4935,75 +4935,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &113002342
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 743574343653968370, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_Name
-      value: Iroha_Sword_Model
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.0816
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9037740202830513546, guid: 2c68f3521e2f78c43a597ddbc869f966,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2c68f3521e2f78c43a597ddbc869f966, type: 3}
 --- !u!1 &344369796
 GameObject:
   m_ObjectHideFlags: 0
@@ -5439,7 +5370,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1431997397
 GameObject:
@@ -5702,6 +5633,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Iroha_Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129438121690375593, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9aeb0757fe0e9504aa28130e9f31827e, type: 3}
