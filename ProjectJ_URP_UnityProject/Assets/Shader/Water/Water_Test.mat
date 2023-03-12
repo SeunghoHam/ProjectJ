@@ -78,9 +78,9 @@ Material:
     - _Waves_Speed: 0.35
     - _Waves_Tile: 38.92
     m_Colors:
-    - _Color: {r: 0.35686275, g: 0.6351773, b: 0.7058824, a: 1}
-    - _Color_HighlightUseWavesAlpha: {r: 2.607511, g: 7.468417, b: 8.250633, a: 0}
-    - _Color_Top: {r: 0.54059607, g: 0.8241255, b: 0.964, a: 1}
+    - _Color: {r: 0.19045925, g: 0.36178353, b: 0.3773585, a: 1}
+    - _Color_HighlightUseWavesAlpha: {r: 4.027324, g: 4.5943785, b: 4.7170873, a: 0}
+    - _Color_Top: {r: 0.2716714, g: 0.34733692, b: 0.3490566, a: 1}
     - _Edge_Form_Color: {r: 0.8330811, g: 0.85785204, b: 0.9150943, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _High_C: {r: 2.6075113, g: 7.4684167, b: 8.250633, a: 0}
