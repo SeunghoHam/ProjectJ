@@ -12,7 +12,6 @@ public class DebugManager : MonoBehaviour
         ins = this;
     }
 
-
     [HideInInspector]
     public enum TextColor
     {

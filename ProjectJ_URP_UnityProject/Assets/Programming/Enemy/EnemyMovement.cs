@@ -22,11 +22,16 @@ public class EnemyMovement : MonoBehaviour
         model = this.transform.GetChild(0).transform;
         rigid = this.GetComponent<Rigidbody>();
         //target = Character.Instance.gameObject.transform;
+
+        
     }
     public void Initialize(EnemyAnimator Anim) // Enemy 스크립트에서 필요한 정보들 가져오기
     {
         animator = Anim;
     }
+
+
+
     private void FixedUpdate()
     {
         if (target == null)
@@ -40,11 +45,11 @@ public class EnemyMovement : MonoBehaviour
        
         if(Input.GetKeyDown(KeyCode.R))
         {
-            JumpAttack();
+            AI_Doing_JumpAttack();
         }
     }
 
-    public void Avoid() // 플레이어가 그냥 공격하면 피해버림
+    public void AI_Doing_Avoid() // 플레이어가 그냥 공격하면 피해버림
     {
         // 플레이어의 위치 - 나(적)의 위치 = 이동해야할 방향의 벡터를 반환
 
@@ -54,13 +59,17 @@ public class EnemyMovement : MonoBehaviour
         Vector3 dir = this.transform.position +  heading * 1.2f;
         this.transform.DOMove(dir, 0.5f, false);
     }
-
-    private void JumpAttack()
+    public void AI_Doing_JumpAttack()
     {
         animator.Anim_Jump();
         rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         //rigid.MovePosition(target.position);
         MoveAttack();
+    }
+    public void  AI_Doing_Jump()
+    {
+        animator.Anim_Jump();
+        rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
     }
     private void MoveAttack()
     {

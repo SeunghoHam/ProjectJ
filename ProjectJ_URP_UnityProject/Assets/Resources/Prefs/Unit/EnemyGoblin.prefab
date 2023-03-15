@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7582792416932930459}
   - component: {fileID: 5221965309256867961}
   - component: {fileID: 1408514555483553872}
+  - component: {fileID: 873928641905586008}
   - component: {fileID: 5221965309256867962}
   - component: {fileID: 5221965309256867963}
   m_Layer: 0
@@ -53,6 +54,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 81aa450735928ee4988f14a66727fe0c, type: 2}
   enemyAnimator: {fileID: 4162323631564900774}
   enemyMovement: {fileID: 1408514555483553872}
+  enemyBT: {fileID: 0}
   _pinTarget: {fileID: 4162323631279705547}
   _pinImage: {fileID: 4162323632099041411}
   _hp: 0
@@ -69,6 +71,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+--- !u!114 &873928641905586008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3350096620261014233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796d55899d3a7fe49ad242a6fae42b99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &5221965309256867962
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -83,7 +97,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &5221965309256867963
 BoxCollider:

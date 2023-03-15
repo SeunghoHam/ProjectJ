@@ -1193,11 +1193,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyGoblin
       objectReference: {fileID: 0}
-    - target: {fileID: 5221965309256867962, guid: 770001a13b5d2004fb46fd462289ea73,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 112
-      objectReference: {fileID: 0}
     - target: {fileID: 7582792416932930459, guid: 770001a13b5d2004fb46fd462289ea73,
         type: 3}
       propertyPath: m_RootOrder

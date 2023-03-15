@@ -10,7 +10,11 @@ public class Enemy : UnitBase
     public EnemyAnimator enemyAnimator;
     public EnemyMovement enemyMovement;
 
+    [HideInInspector] 
+    public EnemyBTBase enemyBT;
 
+
+    [Space(20)]
     [Header("플레이어 시점 고정")]
     [SerializeField] private Transform _pinTarget;
     [SerializeField] private Image _pinImage;
@@ -33,29 +37,30 @@ public class Enemy : UnitBase
     private void Awake()
     {
         EnemyInitilaize();
+        BattleStart();
     }
-
     private void EnemyInitilaize()
     {
         enemyMovement.Initialize(enemyAnimator);
         _pinImage.gameObject.SetActive(false);
         _hp = _data._hp;
-
+        enemyBT = this.GetComponent<EnemyBTBase>();
     }
-    private void Update()
+
+    public void BattleStart()
     {
-        if (_pinImage.gameObject.activeSelf)
-            _pinImage.transform.LookAt(Camera.main.transform);
+        //DebugManager.ins.Log("전투 시작", DebugManager.TextColor.Yellow);
+        Debug.Log("전투 시작");
+        enemyBT.BT_Setting();
     }
-
     #region Battle
     public override void Attack()
     {
+        enemyAnimator.Anim_Slash();
         base.Attack();
     }
     public override void Damaged(int damage)
     {
-        base.Damaged(damage);
         _hp -= damage;
 
         if (_hp <= 0)
@@ -63,17 +68,20 @@ public class Enemy : UnitBase
             Debug.Log("적이 주거써");
             enemyAnimator.Anim_Death();
         }
+        base.Damaged(damage);
         //else return;
     }
+
     public override void Avoid()
     {
         base.Avoid();
-        enemyMovement.Avoid();
+        enemyMovement.AI_Doing_Avoid();
     }
+
     #endregion
 
 
-    #region TargetPin
+    #region ::: TargetPin - 캐릭터에서 사용 :::
     public void Targeting(bool value) // 타겟설정됨
     {
         _pinImage.gameObject.SetActive(value);

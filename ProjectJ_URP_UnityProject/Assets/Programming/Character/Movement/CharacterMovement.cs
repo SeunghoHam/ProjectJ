@@ -115,14 +115,15 @@ public class CharacterMovement : MonoBehaviour
 
     private void GetInput()
     {
-        if (animator.AnimState == CharacterAnimator.ChaAnimState.Roll) // 이동 불가 상태에서
+        if (animator.AnimState == CharacterAnimator.ChaAnimState.Roll ||
+            animator.AnimState == CharacterAnimator.ChaAnimState.Attack ||
+            animator.AnimState == CharacterAnimator.ChaAnimState.SeriesAttackReady
+            ) // 이동 불가 상태에서
         {
-            //DebugManager.ins.Log("동작중이라서 움직임 불가", DebugManager.TextColor.Red);
             _currentSpeed = 0f;
             return;
         }
         _currentSpeed = 2.5f;
-        //DebugManager.ins.Log("움직이는중", DebugManager.TextColor.Blue);
 
         direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // y 값에 현재 위치 할당해보기
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
@@ -170,11 +171,10 @@ public class CharacterMovement : MonoBehaviour
             * direction // 바라보는 방향
             * _currentSpeed // 현재 속도
             * Time.deltaTime);
-
-
-            // 점프 정의
-            controller.Move(_jumpDir * Time.deltaTime);
         }
+
+        // 점프 정의
+        controller.Move(_jumpDir * Time.deltaTime);
 
         // 애니메이션 관련
         _walkValue = Mathf.Abs(direction.x + direction.z); // 어떤 방향이든 입력이 있다면 0 초과로 나옴

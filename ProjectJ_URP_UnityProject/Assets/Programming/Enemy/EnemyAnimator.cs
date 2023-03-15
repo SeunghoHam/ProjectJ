@@ -33,4 +33,10 @@ public class EnemyAnimator : MonoBehaviour
     {
         _animator.SetTrigger("Attack");
     }
+
+
+    public void Anim_End_AI_Routine()
+    {
+
+    }
 }

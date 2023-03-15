@@ -54,7 +54,6 @@ public class CharacterAnimator : MonoBehaviour
     /// <returns>Idle, Jump </returns>
     public bool ReturnCanMove()
     {
-        
         return AnimState == ChaAnimState.Idle || AnimState == ChaAnimState.Jump;
     }
 
@@ -63,7 +62,9 @@ public class CharacterAnimator : MonoBehaviour
     /// <returns></returns>
     public bool ReturnCanJump()
     {
-        return AnimState == ChaAnimState.Idle || AnimState != ChaAnimState.Jump;
+        return AnimState == ChaAnimState.Idle || 
+            AnimState != ChaAnimState.Jump ||
+            AnimState != ChaAnimState.Roll;
     }
     #endregion
     public bool IsRolling
