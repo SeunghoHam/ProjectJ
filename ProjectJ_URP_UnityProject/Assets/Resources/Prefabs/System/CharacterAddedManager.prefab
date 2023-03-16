@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce40bec7fab3ae45b240be676e347eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iroha_modelObject: {fileID: 7129438121690375593, guid: 9aeb0757fe0e9504aa28130e9f31827e,
+    type: 3}
 --- !u!1 &1790530463793424379
 GameObject:
   m_ObjectHideFlags: 0

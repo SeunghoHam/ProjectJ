@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI
     public class PopupManager : UnitySingleton<PopupManager>
     {
         // = Constant
-        private const string PopupPrefix = "Prefs/Popup/UIPopup";
+        private const string PopupPrefix = "Prefabs/Popup/UIPopup";
 
         // = Field
         public readonly List<PopupBase> PopupList = new List<PopupBase>();
