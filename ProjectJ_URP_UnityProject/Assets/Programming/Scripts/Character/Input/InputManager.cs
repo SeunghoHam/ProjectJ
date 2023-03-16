@@ -2,16 +2,14 @@ using System;
 using UniRx.Triggers;
 using UnityEngine;
 using UniRx;
-using Unity.VisualScripting;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using Assets.Scripts.Manager;
-using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
     private CharacterMovement Movement;
     private CharacterAnimator Animator;
+    private WeaponController weaponController;
     // Input
     private float _refChargeTime = 0.7f;
     private float _curChargeTime;
@@ -24,6 +22,8 @@ public class InputManager : MonoBehaviour
     {
         Animator = Character.Instance.characterAnimator;
         Movement = Character.Instance.characterMovement;
+        weaponController = Character.Instance.weaponController;
+
         InputSetting();
     }
     private void InputSetting()
@@ -63,6 +63,7 @@ public class InputManager : MonoBehaviour
                 Attack();
             });
 
+        //  무기 활성화 및 비활성화 시키기
 
         mouseRightDownStream
             .Subscribe(_ => Ready());

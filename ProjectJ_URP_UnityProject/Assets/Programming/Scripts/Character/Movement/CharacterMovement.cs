@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEditor.UI;
 using UnityEngine;
 
@@ -87,7 +88,14 @@ public class CharacterMovement : MonoBehaviour
         cameraSystem = Character.Instance.cameraSystem;
         CursurSetting();
         _saveQuaternion = Quaternion.identity;
+
+
+        controller
+            .ObserveEveryValueChanged(x => x.isGrounded)
+            .ThrottleFrame(5)
+            .Subscribe(x => _isGrounded = x);
     }
+    bool _isGrounded; // 좀 더 정밀도 높은 isGrounded
 
     void FixedUpdate()
     {

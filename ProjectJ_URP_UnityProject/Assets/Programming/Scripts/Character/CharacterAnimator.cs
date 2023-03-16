@@ -1,13 +1,10 @@
 using Assets.Scripts.Manager;
-using DG.Tweening;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
+    [SerializeField] private WeaponController weaponController; 
+
     private Animator _animator;
     private float _walkValue;
 
@@ -93,6 +90,7 @@ public class CharacterAnimator : MonoBehaviour
     private void Awake()
     {
         _animator = this.GetComponent<Animator>();
+        //weaponController = Character.Instance.weaponController;
     }
     public float WalkValue
     {
@@ -140,6 +138,7 @@ public class CharacterAnimator : MonoBehaviour
     public void Anim_Sword_Slash1()
     {
         _animator.SetTrigger("Slash1");
+        weaponController.SwordAnim_Show();
     }
     public void Anim_Sword_Slash2()
     {
@@ -205,6 +204,7 @@ public class CharacterAnimator : MonoBehaviour
         //IsAttacking = false;
         AnimState = ChaAnimState.Idle;
         CanAttack = true;
-        //DebugManager.ins.Log("EndSlash");
+        //DebugManager.ins.Log("EndSlash 
+        weaponController.TimerStart();
     }
 }

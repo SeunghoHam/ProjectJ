@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class Character : UnitBase
@@ -10,11 +9,10 @@ public class Character : UnitBase
     public CharacterMovement characterMovement;
     public CharacterAnimator characterAnimator;
     public CameraSystem cameraSystem;
+    public WeaponController weaponController;
 
     public static Character Instance;
-
-
-
+    
     private int _maxHP = 10;
     private int _curHP;
     public int MaxHP
