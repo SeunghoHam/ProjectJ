@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using Assets.Scripts.Manager;
 using UniRx.Triggers;
+using UniRx;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class EnemyMovement : MonoBehaviour
 
     private Rigidbody rigid;
     private bool isDoing = false; // 동작중
-    private float _jumpForce = 3f;
+    private float _jumpForce = 6f;
     private float _moveDuration = 0.5f; // 이동에 걸리는 시간
     private void Awake()
     {
@@ -42,11 +43,6 @@ public class EnemyMovement : MonoBehaviour
             Vector3 targetAxis = new Vector3(target.transform.position.x, this.transform.position.y, transform.position.z);
             model.LookAt(target, Vector3.up);
         }
-       
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            AI_Doing_JumpAttack();
-        }
     }
 
     public void AI_Doing_Avoid() // 플레이어가 그냥 공격하면 피해버림
@@ -59,21 +55,33 @@ public class EnemyMovement : MonoBehaviour
         Vector3 dir = this.transform.position +  heading * 1.2f;
         this.transform.DOMove(dir, 0.5f, false);
     }
-    public void AI_Doing_JumpAttack()
+    public IEnumerator AI_Doing_JumpAttack()
     {
         animator.Anim_Jump();
         rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-        //rigid.MovePosition(target.position);
-        MoveAttack();
+        //MoveAttack();
+
+        //yield return new WaitForSeconds(0.3f);
+        Vector3 heading = (this.transform.position - target.position).normalized; // 캐릭터 - 나(적) 이 되도록
+        Vector3 dir = target.position + heading;
+        this.transform.DOMove(dir, 0.5f, false);
+        animator.Anim_Attack1();
+        yield return new WaitForSeconds(1f);
     }
-    public void  AI_Doing_Jump()
+    public IEnumerator AI_Doing_Jump()
     {
         animator.Anim_Jump();
         rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(1f);
     }
-    private void MoveAttack()
+    public IEnumerator AI_Doing_Rolling()
     {
-        this.transform.DOMove(target.position, _moveDuration, false);
-        animator.Anim_Slash();
+        float duration = 0.5f;
+        
+        model.DOLocalRotate(new Vector3(0, 360, 0), duration * 0.5f , RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(2, LoopType.Incremental);
+        Vector3 heading = (this.transform.position - target.position).normalized; // 캐릭터 - 나(적) 이 되도록
+        Vector3 dir = target.position + heading;
+        this.transform.DOMove(dir, duration, false).SetEase(Ease.InQuad);
+        yield return new WaitForSeconds(duration);
     }
 }

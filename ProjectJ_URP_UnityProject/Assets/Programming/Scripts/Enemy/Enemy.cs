@@ -16,8 +16,8 @@ public class Enemy : UnitBase
 
     [Space(20)]
     [Header("플레이어 시점 고정")]
-    [SerializeField] private Transform _pinTarget;
-    [SerializeField] private Image _pinImage;
+    [SerializeField] private Transform _pinTarget; // 고정시킬 오브젝트(바라보는거)
+    [SerializeField] private MeshRenderer _pinObject; // 고정되어있다면 활성화 시킬 오브젝트
 
 
     [Space(10)]
@@ -42,21 +42,20 @@ public class Enemy : UnitBase
     private void EnemyInitilaize()
     {
         enemyMovement.Initialize(enemyAnimator);
-        _pinImage.gameObject.SetActive(false);
+        _pinObject.enabled = false;
         _hp = _data._hp;
         enemyBT = this.GetComponent<EnemyBTBase>();
     }
 
     public void BattleStart()
     {
-        //DebugManager.ins.Log("전투 시작", DebugManager.TextColor.Yellow);
         Debug.Log("전투 시작");
-        enemyBT.BT_Setting();
+        //enemyBT.BT_Setting();
     }
     #region Battle
     public override void Attack()
     {
-        enemyAnimator.Anim_Slash();
+        enemyAnimator.Anim_Attack1();
         base.Attack();
     }
     public override void Damaged(int damage)
@@ -84,7 +83,7 @@ public class Enemy : UnitBase
     #region ::: TargetPin - 캐릭터에서 사용 :::
     public void Targeting(bool value) // 타겟설정됨
     {
-        _pinImage.gameObject.SetActive(value);
+        _pinObject.enabled = value;
     }
     public Transform PinTargetPoint // 캐릭터쪽에서 타겟고정에 사용
     {

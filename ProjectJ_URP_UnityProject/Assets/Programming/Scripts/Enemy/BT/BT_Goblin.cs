@@ -10,9 +10,38 @@ public class BT_Goblin : EnemyBTBase
         movement = this.GetComponent<EnemyMovement>();
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            DebugManager.ins.Log("AI동작 : 점프", DebugManager.TextColor.Yellow);
+            StartCoroutine(movement.AI_Doing_Jump());
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            DebugManager.ins.Log("AI동작 : 롤링", DebugManager.TextColor.Yellow);
+            StartCoroutine(movement.AI_Doing_Rolling());
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            DebugManager.ins.Log("AI동작 : 점프공격", DebugManager.TextColor.Yellow);
+            StartCoroutine(movement.AI_Doing_JumpAttack());
+        }
+    }
     protected override IEnumerator AIRoutineBody() 
     {
-        movement.AI_Doing_Jump();
+        
+        int ran = UnityEngine.Random.Range(0, 2);
+        switch (ran)
+        {
+            case 0:
+                movement.AI_Doing_Jump();
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
         Debug.Log("AiRoutine");
         yield return new WaitForSeconds(1f);
         Debug.Log("1초 기다렸다가 반환");

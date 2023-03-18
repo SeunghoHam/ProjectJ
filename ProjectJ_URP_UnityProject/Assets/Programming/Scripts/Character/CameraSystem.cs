@@ -9,7 +9,7 @@ public class CameraSystem : MonoBehaviour
     [Space(5)]
     [SerializeField] private CinemachineVirtualCamera _cam3rdSight;
 
-    [SerializeField] private Cinemachine3rdPersonFollow _cameraComponent;
+    private Cinemachine3rdPersonFollow _cameraComponent;
     public Vector3 _shoulderOffset;
     private Vector3 _damping;
 

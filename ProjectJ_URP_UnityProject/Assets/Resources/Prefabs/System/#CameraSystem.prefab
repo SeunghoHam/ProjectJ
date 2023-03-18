@@ -251,7 +251,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _brain: {fileID: 2691223733732181357}
   _cam3rdSight: {fileID: 2691223734916567442}
-  _cameraComponent: {fileID: 0}
   _shoulderOffset: {x: 0, y: 0, z: 0}
   _targetPoint_xValue: 0
 --- !u!1 &2691223734750569796

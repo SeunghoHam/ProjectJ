@@ -120,20 +120,22 @@ public class InputManager : MonoBehaviour
             Debug.Log("공격 반환당함");
             return;
         }
+
         Animator.CanAttack = false;
-        if (Animator.AnimState != CharacterAnimator.ChaAnimState.SeriesAttackReady) // 연속공격 중이 아님 ( 1타 ) 
+        //if (Animator.AnimState != CharacterAnimator.ChaAnimState.SeriesAttackReady) // 연속공격 중이 아님 ( 1타 ) 
+        if(Animator.AttackCount == 0)
         {
-            Debug.Log("공격_1타");
-            Animator.AnimState = CharacterAnimator.ChaAnimState.SeriesAttackReady;
+            //Debug.Log("공격_1타");
+            Animator.AnimState = CharacterAnimator.ChaAnimState.Attack;
             Animator.Anim_Sword_Slash1();
+            
             //Animator.IsAttacking = true;
             //_isContinuous = true;
         }
-        else // 연속공격 적용
+        else if(Animator.AttackCount == 1) // 연속공격 적용
         {
-            Animator.AnimState = CharacterAnimator.ChaAnimState.Attack;
             //Animator.IsAttacking = true;
-            Debug.Log("공격_2타");
+            //Debug.Log("공격_2타");
             Animator.Anim_Sword_Slash2();
         }
 
@@ -161,16 +163,16 @@ public class InputManager : MonoBehaviour
     public void Run()
     {
         //DebugManager.ins.Log("Run", DebugManager.TextColor.Red);
-        Animator.WalkValue = 1.0f;
+        //Animator.WalkValue = 1.0f;
     }
     public void RunCancel()
     {
         //DebugManager.ins.Log("Run Cancel", DebugManager.TextColor.Red);
-        Animator.WalkValue = 0.0f;
+        //Animator.WalkValue = 0.0f;
     }
     public void Jump()
     {
-        if (Animator.ReturnCanJump())//|| !Animator.IsJumping)
+        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle) //|| !Animator.IsJumping)
         {
             Animator.AnimState = CharacterAnimator.ChaAnimState.Jump;
             Animator.IsJumping = true;
@@ -181,7 +183,7 @@ public class InputManager : MonoBehaviour
     }
     public void Roll()
     {
-        if (Animator.AnimState != CharacterAnimator.ChaAnimState.Roll)//) &&!Animator.IsRolling)
+        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//) &&!Animator.IsRolling)
         {
             Animator.AnimState = CharacterAnimator.ChaAnimState.Roll;
             Animator.IsRolling = true;

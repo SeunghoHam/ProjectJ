@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
-using UnityEditor.UI;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
@@ -15,7 +14,6 @@ public class CharacterMovement : MonoBehaviour
     float _speedSmoothVelocity = 0.5f; // default 1
     float _speedSmoothTime = 1f;
     float _currentSpeed = 2.5f;
-    float _velocityY;
 
     float moveSpeed = 5.0f; // 5
     float rotateSpeed = 10.0f;
@@ -25,7 +23,6 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private Transform _targetPoint;
 
-    private float _walkValue; // 걷는 힘.
     private Vector3 direction; // 키보드 입력
     private Vector2 mouseAxis;
     private float _rotX;
@@ -49,6 +46,7 @@ public class CharacterMovement : MonoBehaviour
     // Roll
     private Vector3 _rollTargetPos;
     private Vector3 _rollMovePos;
+
 
     public bool Attacking
     {
@@ -103,6 +101,7 @@ public class CharacterMovement : MonoBehaviour
         AboutRoll();
         GetInput();
         Movement();
+        WalkBlend();
 
         if (!_isPin)
             MouseRotator();
@@ -185,9 +184,7 @@ public class CharacterMovement : MonoBehaviour
         controller.Move(_jumpDir * Time.deltaTime);
 
         // 애니메이션 관련
-        _walkValue = Mathf.Abs(direction.x + direction.z); // 어떤 방향이든 입력이 있다면 0 초과로 나옴
-        animator.Anim_GetDirection(direction.x, direction.z);
-        animator.Anim_WalkValue(_walkValue);
+        //_walkValue = Mathf.Abs(direction.x + direction.z); // 어떤 방향이든 입력이 있다면 0 초과로 나옴
     }
     private void MouseRotator()
     {
@@ -251,19 +248,15 @@ public class CharacterMovement : MonoBehaviour
         //this.transform.DOMove(_rollMovePos, 0.8f, false).SetEase(Ease.InQuad); // snapping true = 정수이동
     }
     private Vector3 _rollDir; // 구르기 방향
-    private float _rollSpeed = 2f;
+    private float _rollSpeed = 5f;
     private void AboutRoll()
     {
-        if (animator.IsRolling) // 구르기중
-        {
+        if (!animator.IsRolling)
+            return;
             //controller.Move(_rollDir * Time.deltaTime);
             controller.Move(_rollDir * _rollSpeed * Time.deltaTime);
-        }
-        else
-        {
-
-        }
     }
+
     private float _jumpHeight = 1.5f;
     //private float _jumpLinearValue = 30f;
 
@@ -304,5 +297,23 @@ public class CharacterMovement : MonoBehaviour
             //_jumpDir.y = Mathf.Lerp(_jumpDir.y, _jumpHeight, _jumpLinearValue * Time.deltaTime);
             _jumpDir.y = _jumpHeight;
         }
+    }
+
+    // [-1:뒤로걷기, 0:idle, 1:앞으로걷기]
+    private void WalkBlend()
+    {
+        animator.Anim_GetDirection(direction.x, direction.z);
+
+        float walkBlend;
+        if (direction.y < 0) // 뒤로걷기
+        {
+            walkBlend = direction.z;
+        }
+        else
+        {
+            walkBlend =
+                Mathf.Abs(direction.x) + direction.z;
+        }
+        animator.Blend_Walk(Mathf.Clamp(walkBlend, -1, 1));
     }
 }

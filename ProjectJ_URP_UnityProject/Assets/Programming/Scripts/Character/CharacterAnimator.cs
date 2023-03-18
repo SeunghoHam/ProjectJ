@@ -6,14 +6,18 @@ public class CharacterAnimator : MonoBehaviour
     [SerializeField] private WeaponController weaponController; 
 
     private Animator _animator;
-    private float _walkValue;
-
+    private float _walkBlend;
+   
     // 구르기동안은 input을 받으면 안되고, 점프중일때는 이동속도 감소만 해야되니까 다른 변수로 할당함
     private bool _isRolling;
     private bool _isJumping;
     private bool _isAttacking; // 공격중(구르기 가능)
     private bool _isStateChnaging; // 애니메이터 레이어 변경중
 
+    private int _attackCount; // 연속공격에 사용
+    public int AttackCount
+    { get { return _attackCount; } }
+    
     private bool _canAttack =true;
     public bool CanAttack
     {
@@ -25,7 +29,6 @@ public class CharacterAnimator : MonoBehaviour
         }
     }
 
-
     public Animator animator
     {
         get { return _animator; }
@@ -36,16 +39,16 @@ public class CharacterAnimator : MonoBehaviour
     public enum ChaAnimState
     {
         Idle, // 동작 가능 상태
-        Jump, // 점프, 
+        Jump, // 점프,
         Roll, //  구르기
         Attack, // 공격중
-        SeriesAttackReady, // 연속공격 준비
+        //SeriesAttackReady, // 연속공격 준비
     }
+    
 
     public ChaAnimState AnimState = ChaAnimState.Idle;
 
     #region ::: 애니스테이트 편하게 가져오기 위해서 미리 bool 함수로 정의해두기
-
 
     /// <summary> 점프나 아무것도 안할때만 이동되도록함 </summary>
     /// <returns>Idle, Jump </returns>
@@ -54,15 +57,6 @@ public class CharacterAnimator : MonoBehaviour
         return AnimState == ChaAnimState.Idle || AnimState == ChaAnimState.Jump;
     }
 
-
-    /// <summary> 점프중이 아니거나 아무것도 안할때만 점프가능 </summary>
-    /// <returns></returns>
-    public bool ReturnCanJump()
-    {
-        return AnimState == ChaAnimState.Idle || 
-            AnimState != ChaAnimState.Jump ||
-            AnimState != ChaAnimState.Roll;
-    }
     #endregion
     public bool IsRolling
     {
@@ -92,24 +86,17 @@ public class CharacterAnimator : MonoBehaviour
         _animator = this.GetComponent<Animator>();
         //weaponController = Character.Instance.weaponController;
     }
-    public float WalkValue
+
+    public void Blend_Walk(float value)
     {
-        get { return _walkValue; }
-        set
-        {
-            if (_walkValue != value)
-            {
-                //Debug.Log("WalkValue : " + value);
-                _walkValue = value;
-                _animator.SetFloat("WalkBlend", _walkValue);
-            }
-        }
+        _animator.SetFloat("WalkBlend", value);
+    }
+    public void Anim_GetDirection(float dirx, float diry)
+    {
+        animator.SetFloat("DirX", dirx);
+        animator.SetFloat("DirY", diry);
     }
 
-    public void Anim_Move()
-    {
-        _animator.SetTrigger("Move");
-    }
     public void Anim_Roll()
     {
         _animator.SetTrigger("Roll");
@@ -124,21 +111,14 @@ public class CharacterAnimator : MonoBehaviour
         _animator.SetTrigger("Idle");
     }
 
-    public void Anim_GetDirection(float dirx, float diry)
-    {
-        animator.SetFloat("DirX", dirx);
-        animator.SetFloat("DirY", diry);
-    }
-    public void Anim_WalkValue(float walkValue)
-    {
-        animator.SetFloat("WalkValue", walkValue);
-    }
+
 
     #region ##### Sword #####
     public void Anim_Sword_Slash1()
     {
         _animator.SetTrigger("Slash1");
         weaponController.SwordAnim_Show();
+        _attackCount++;
     }
     public void Anim_Sword_Slash2()
     {
@@ -202,9 +182,9 @@ public class CharacterAnimator : MonoBehaviour
     public void End_Anim_Slash()
     {
         //IsAttacking = false;
+        _attackCount = 0;
         AnimState = ChaAnimState.Idle;
         CanAttack = true;
-        //DebugManager.ins.Log("EndSlash 
         weaponController.TimerStart();
     }
 }

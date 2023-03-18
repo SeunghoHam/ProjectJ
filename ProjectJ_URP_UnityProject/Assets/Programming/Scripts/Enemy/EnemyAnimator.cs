@@ -21,6 +21,22 @@ public class EnemyAnimator : MonoBehaviour
     }
     public EnemyAnimState AnimState;
 
+    public void Anim_Attack1()
+    {
+        _animator.SetTrigger("Attack1");
+    }
+    public void Anim_Attack2()
+    {
+        _animator.SetTrigger("Attack2");
+    }
+    public void Anim_Attack3()
+    {
+        _animator.SetTrigger("Attack3");
+    }
+    public void Anim_Damaged()
+    {
+        _animator.SetTrigger("Damaged");
+    }
     public void Anim_Jump()
     {
         _animator.SetTrigger("Jump");
@@ -29,14 +45,6 @@ public class EnemyAnimator : MonoBehaviour
     {
         _animator.SetTrigger("Death");
     }
-    public void Anim_Slash()
-    {
-        _animator.SetTrigger("Attack");
-    }
 
-
-    public void Anim_End_AI_Routine()
-    {
-
-    }
+    
 }

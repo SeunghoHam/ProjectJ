@@ -97,16 +97,24 @@ namespace Assets.Scripts.UI
         }
         private IEnumerator Show<T>(IObserver<T> observer, CancellationToken token, PopupStyle style, object[] data) where T: PopupBase 
         {
+            /*
             yield return Get<T>(token, style);
-
-            PopupBase popupBase = PopupList[0];
-
+            Debug.Log("popuplist  : " + PopupList.Count);
+            PopupBase popupBase = PopupList[PopupList.Count-1];
+            //PopupBase popupBase = PopupList[0];
+            */
+            PopupBase popupBase = null;
+            yield return Get<T>(token, style);
+            popupBase = PopupList[0];
+            //yield return Observable.FromCoroutineValue<T>(() => Get<T>(token, style)).Where(popup => popup != null).StartAsCoroutine(popup => popupBase = popup);
             popupBase.SetParent(transform);
             popupBase.Show(data);
             popupBase.gameObject.SetActive(true);
 
             observer.OnNext(popupBase.GetComponent<T>());
             observer.OnCompleted();
+
+            yield return null;
         }
 
         public void Hide(PopupStyle style)

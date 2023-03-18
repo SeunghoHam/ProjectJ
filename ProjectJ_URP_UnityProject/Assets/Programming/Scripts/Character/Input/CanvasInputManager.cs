@@ -25,7 +25,7 @@ public class CanvasInputManager : MonoBehaviour
     private void InputSetting()
     {
         //var Esc = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Escape)).Subscribe(_=> Input_ESC()).AddTo(gameObject);
-        //var I = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.I)).Subscribe(_ => Input_I()).AddTo(gameObject);
+        var p = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.P)).Subscribe(_ => Input_I()).AddTo(gameObject);
     }
     private void Input_ESC() // 일시정지 활성화
     {
@@ -47,6 +47,7 @@ public class CanvasInputManager : MonoBehaviour
     }
     private void Input_I() // 인벤토리 활성화
     {
+        FlowManager.Instance.AddSubPopup(PopupStyle.Pause);
         // 인벤토리가 활성화 되어있다면 인벤토리 닫기.
         // 아니라면 인벤토리 활성화
     }

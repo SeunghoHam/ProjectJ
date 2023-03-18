@@ -29,7 +29,6 @@ public class Character : UnitBase
         }
     }
 
-
     // CharacterState : Normal / Sword
     public enum WeaponState
     { 
