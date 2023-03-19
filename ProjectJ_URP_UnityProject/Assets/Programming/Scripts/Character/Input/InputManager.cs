@@ -201,26 +201,26 @@ public class InputManager : MonoBehaviour
 
     public void PinTarget()
     {
-        /*
-        if (Character._enemyList.Count >= 1)
+        
+        if (BattleManager.GetPinEnemyList().Count >= 1)
         {
             if (Movement.IsPin) // Pin 활성화 되어있음
             {
-                DebugManager.ins.Log("타겟 활성화 해제하기", DebugManager.TextColor.White);
+                //DebugManager.ins.Log("타겟 활성화 해제하기", DebugManager.TextColor.White);
                 Movement.SetPinEnemy(null); // movement의 pinTarget 지우기
                 Movement.IsPin = false;
             }
             else // Pikkn 활성화가 안되어있을 때
             {
-                DebugManager.ins.Log("타겟 활성화 시키기", DebugManager.TextColor.White);
-                Movement.SetPinEnemy(Character.GetEnemy());
+                //DebugManager.ins.Log("타겟 활성화 시키기", DebugManager.TextColor.White);
+                Movement.SetPinEnemy(BattleManager.GetPinEnemyList()[0]);
                 Movement.IsPin = true;
             }
         }
         else
         {
-            DebugManager.ins.Log("리스트 비어서 동작 안함 ㅅㄱ", DebugManager.TextColor.White);
+            //DebugManager.ins.Log("리스트 비어서 동작 안함 ㅅㄱ", DebugManager.TextColor.White);
             Movement.IsPin = false;
-        }*/
+        }
     }
 }

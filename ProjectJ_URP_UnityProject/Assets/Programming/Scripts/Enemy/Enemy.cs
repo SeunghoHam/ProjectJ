@@ -7,8 +7,8 @@ public class Enemy : UnitBase
 {
     // 캐릭터 및 데이터 정보 받아오기
     public EnemyData _data; // ScriptAble데이터로 저장된 정보 가져오기
-    public EnemyAnimator enemyAnimator;
-    public EnemyMovement enemyMovement;
+    public EnemyAnimator animator;
+    public EnemyMovement movement;
 
     [HideInInspector] 
     public EnemyBTBase enemyBT;
@@ -41,7 +41,7 @@ public class Enemy : UnitBase
     }
     private void EnemyInitilaize()
     {
-        enemyMovement.Initialize(enemyAnimator);
+        movement.Initialize(animator);
         _pinObject.enabled = false;
         _hp = _data._hp;
         enemyBT = this.GetComponent<EnemyBTBase>();
@@ -50,31 +50,36 @@ public class Enemy : UnitBase
     public void BattleStart()
     {
         Debug.Log("전투 시작");
+
+        // AI 활성화
         //enemyBT.BT_Setting();
     }
     #region Battle
     public override void Attack()
     {
-        enemyAnimator.Anim_Attack1();
+        animator.Anim_Attack1();
         base.Attack();
     }
     public override void Damaged(int damage)
     {
         _hp -= damage;
-
         if (_hp <= 0)
         {
             Debug.Log("적이 주거써");
-            enemyAnimator.Anim_Death();
+            animator.Anim_Death();
         }
+        else
+        {
+            animator.Anim_Damaged();
+        }
+
         base.Damaged(damage);
-        //else return;
     }
 
     public override void Avoid()
     {
         base.Avoid();
-        enemyMovement.AI_Doing_Avoid();
+        movement.AI_Doing_Avoid();
     }
 
     #endregion

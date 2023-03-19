@@ -25,12 +25,14 @@ public class CharacterMovement : MonoBehaviour
 
     private Vector3 direction; // 키보드 입력
     private Vector2 mouseAxis;
-    private float _rotX;
-    private float _rotY;
+    [SerializeField] private float _rotX;
+    [SerializeField] private float _rotY;
+    // 타겟 고정 해제 후에도 시야 방향 유지되도록 값 저장해두기
+    [SerializeField] private float setRotX;
+    [SerializeField] private float setRotY;
     private float _sensitivity = 5f;
     private Quaternion _xTargetRotation;
     private Quaternion _yTargetRotation;
-    private Quaternion _saveQuaternion;
 
 
     // Attack
@@ -66,15 +68,19 @@ public class CharacterMovement : MonoBehaviour
             {
                 if (value)
                 {
-
+                    _isPin = value; // 
                 }
                 else
                 {
                     // 고정이 해제 될 때
-                    //DebugManager.ins.Log("Pin 상태 해제", DebugManager.TextColor.Red);
-                    //_saveQuaternion = _targetPoint.localRotation;
+                    
+                    Debug.Log("저장한 수치 :" + setRotX + ", " + setRotY);
+                    _isPin = value;
+                    _rotX = setRotX;
+                    _rotY = setRotY;
+                    Debug.Log("변경한 수치 :" + _rotX + ", " + _rotY);
                 }
-                _isPin = value; // 
+                
             }
         }
     }
@@ -85,13 +91,22 @@ public class CharacterMovement : MonoBehaviour
         animator = Character.Instance.characterAnimator;
         cameraSystem = Character.Instance.cameraSystem;
         CursurSetting();
-        _saveQuaternion = Quaternion.identity;
-
 
         controller
             .ObserveEveryValueChanged(x => x.isGrounded)
             .ThrottleFrame(5)
             .Subscribe(x => _isGrounded = x);
+    }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.J))
+        {
+            _rotX += 10;
+        }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            _rotX -= 10;
+        }
     }
     bool _isGrounded; // 좀 더 정밀도 높은 isGrounded
 
@@ -123,8 +138,7 @@ public class CharacterMovement : MonoBehaviour
     private void GetInput()
     {
         if (animator.AnimState == CharacterAnimator.ChaAnimState.Roll ||
-            animator.AnimState == CharacterAnimator.ChaAnimState.Attack ||
-            animator.AnimState == CharacterAnimator.ChaAnimState.SeriesAttackReady
+            animator.AnimState == CharacterAnimator.ChaAnimState.Attack
             ) // 이동 불가 상태에서
         {
             _currentSpeed = 0f;
@@ -197,9 +211,9 @@ public class CharacterMovement : MonoBehaviour
 
         _rotY = Mathf.Clamp(_rotY, -50f, 50f); // 상하회전 최대값 제한
         _yTargetRotation = Quaternion.Euler(0, _rotX, 0); // 좌우회전
-        _xTargetRotation = Quaternion.Euler(_rotY * 0.8f, 0, 0); // 상하회전 : 감도 변경이 필요해보임
+        _xTargetRotation = Quaternion.Euler(_rotY, 0, 0); // 상하회전 : 감도 변경이 필요해보임
 
-        _targetPoint.transform.localRotation = (_yTargetRotation * _xTargetRotation) * _saveQuaternion;
+        _targetPoint.transform.localRotation = (_yTargetRotation * _xTargetRotation);
         //DebugManager.ins.Log("TargetPoint.y : " + _targetPoint.transform.localEulerAngles.x);
         // TargetPoint 의 EulerAngles  상태 = ( _rotY,  rotX, 0 );
     }
@@ -218,6 +232,8 @@ public class CharacterMovement : MonoBehaviour
     }
     private void PinRotator()
     {
+        setRotX = _targetPoint.localEulerAngles.y;
+        setRotY = _targetPoint.localEulerAngles.x;
         _targetPoint.transform.DOLookAt(_pinEnemy.PinTargetPoint.position, 0.1f, AxisConstraint.Y
             , null).SetEase(Ease.Linear);
 
@@ -268,21 +284,9 @@ public class CharacterMovement : MonoBehaviour
         DebugManager.ins.Log("점프", DebugManager.TextColor.Blue);
         _jumpDir = controller.transform.TransformDirection(_jumpDir); // 로컬벡터를 월드벡터로 변환시킴
     }
-    private bool JumpProperty
-    {
-        get { return controller.isGrounded; }
-        set
-        {
-            if (controller.isGrounded != value)
-            {
-                
-            }
-        }
-    }
+
     private void AboutJump()
     {
-        JumpProperty = controller.isGrounded;
-
         if (controller.isGrounded)
         {
             //_moveDir.y = _jumpHeight;

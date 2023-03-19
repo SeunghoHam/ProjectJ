@@ -19,7 +19,7 @@ namespace Assets.Scripts.Manager
         // 회피같은 시스템을 위해서 캐릭터랑 전투중인 적들 가져오기
         private EnemyMovement enemyMovemnet;
 
-        #region Attack
+        #region ::: Attack :::
         public static List<Enemy> GetEnemy()
         {
             return _enemyList_attack;
@@ -34,6 +34,26 @@ namespace Assets.Scripts.Manager
             _enemyList_attack.Remove(enemy);
             return enemy;
         }
+        #endregion
+        #region ::: Pin :::
+        public static List<Enemy> GetPinEnemyList()
+        {
+            return _enemyList_pin;
+        }
+        public static Enemy AddPinEnemy(Enemy enemy)
+        {
+            _enemyList_pin.Add(enemy);
+            return enemy;
+        }
+        public static Enemy RemovePinEnemy(Enemy enemy)
+        {
+            _enemyList_pin.Remove(enemy);
+            return enemy;
+        }
+        #endregion
+
+
+
 
         public static GameObject GetPlayer()
         {
@@ -49,7 +69,6 @@ namespace Assets.Scripts.Manager
             _player = null;
         }
 
-        #endregion
 
         /// <summary>
         /// 플레이어의 공격이 모션에서 공격에 해당하는 부분에서 재생

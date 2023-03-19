@@ -6,7 +6,6 @@ public class CharacterAnimator : MonoBehaviour
     [SerializeField] private WeaponController weaponController; 
 
     private Animator _animator;
-    private float _walkBlend;
    
     // 구르기동안은 input을 받으면 안되고, 점프중일때는 이동속도 감소만 해야되니까 다른 변수로 할당함
     private bool _isRolling;
@@ -28,7 +27,6 @@ public class CharacterAnimator : MonoBehaviour
                 _canAttack = value;
         }
     }
-
     public Animator animator
     {
         get { return _animator; }

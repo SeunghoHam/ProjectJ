@@ -203,7 +203,7 @@ AnimatorStateMachine:
     m_Position: {x: -70, y: -110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2863057070229347664}
-    m_Position: {x: -110, y: 0, z: 0}
+    m_Position: {x: -160, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3598370625622820849}
     m_Position: {x: 20, y: -240, z: 0}
@@ -282,7 +282,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ani_Titan_Jump
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -4595761658584567623}
@@ -497,7 +497,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: WalkBlend
     m_Type: 1
@@ -731,7 +731,10 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: Jump
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2863057070229347664}
   m_Solo: 0

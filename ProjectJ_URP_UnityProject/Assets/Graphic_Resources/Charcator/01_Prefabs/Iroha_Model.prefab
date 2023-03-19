@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 1313376458}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.8, z: 0}
-  m_LocalScale: {x: 7, y: 1, z: 7}
+  m_LocalScale: {x: 8, y: 1, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2717439232205356267}
@@ -324,6 +324,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _iroha: {fileID: 6928669828478968237}
   _targetPoint: {fileID: 42009734}
+  _rotX: 0
+  _rotY: 0
+  setRotX: 0
+  setRotY: 0
 --- !u!114 &5983931332572466859
 MonoBehaviour:
   m_ObjectHideFlags: 0
