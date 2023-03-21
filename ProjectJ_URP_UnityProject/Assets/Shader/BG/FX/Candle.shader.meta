@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 446d12a9f0953ba44a6cbde869086f57
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _Candle_Fire_Tex: {fileID: 2800000, guid: d70c21b2425d8d84087c452bb9159fcf, type: 3}
+  - _Tex_Noise: {fileID: 2800000, guid: e2f126f8a349a8b40b104e18725df962, type: 3}
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
