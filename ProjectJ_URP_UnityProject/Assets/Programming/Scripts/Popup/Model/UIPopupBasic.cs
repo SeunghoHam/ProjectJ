@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Assets.Scripts.Common.DI;
 using UnityEngine;
 using Assets.Scripts.UI.Popup.PopupView;
-using Assets.Scripts.Util;
 
 namespace Assets.Scripts.UI.Popup.Base
 {
@@ -17,9 +16,9 @@ namespace Assets.Scripts.UI.Popup.Base
         [DependuncyInjection(typeof(ResourcesManager))]
         private ResourcesManager _resourcesManager;
 
+        [DependuncyInjection(typeof(PopupManager))]
+        private PopupManager _popupManager;
         [SerializeField] private BasicView _basicView;
-
-        public readonly OnEventTrigger<PopupBase> LoadCompletePopup = new OnEventTrigger<PopupBase>();
 
         public override void Initialize()
         {
@@ -28,6 +27,7 @@ namespace Assets.Scripts.UI.Popup.Base
 
             _basicView.FlowManager = _flowManager;
             _basicView.ResourcesManager = _resourcesManager;
+            _basicView.PopupManager = _popupManager;
         }
 
         public override void Show(params object[] data)

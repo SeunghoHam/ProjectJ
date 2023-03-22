@@ -1,6 +1,8 @@
 using Assets.Scripts.Common.DI;
 using Assets.Scripts.Manager;
 using Assets.Scripts.MangeObject;
+using Assets.Scripts.UI.Popup.Base;
+using Assets.Scripts.Util;
 using DG.Tweening;
 using System;
 using System.Collections;
@@ -16,7 +18,9 @@ namespace Assets.Scripts.UI.Popup.PopupView
     {
         public FlowManager FlowManager { get; set; }
         public ResourcesManager ResourcesManager { get; set; }
+        public PopupManager PopupManager { get; set; }
 
+        public UIPopupInteract popup_Interact;
        
         [SerializeField] Image _hpValue;
         [SerializeField] Image _mpValue;
@@ -35,12 +39,34 @@ namespace Assets.Scripts.UI.Popup.PopupView
 
             this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ =>
             {
-                //Debug.Log("E");
-                FlowManager.AddSubPopup(PopupStyle.Interact);
+                Interact();
             }
             ).AddTo(gameObject);
         }
 
+        private bool _interactActive = false;
+        private void Interact()
+        {
+            if(!_interactActive)
+            {
+                FlowManager.AddSubPopup(PopupStyle.Interact);
+                StartCoroutine(InteractSettingRoutine());
+                //BattleManager.Instance.CursorVisible(true);
+            }
+            else
+            {
+                popup_Interact.Hide();
+                popup_Interact = null;
+                _interactActive = false;
+                //BattleManager.Instance.CursorVisible(false);
+            }
+        }
+        private IEnumerator InteractSettingRoutine()
+        {
+            yield return new WaitUntil(() => PopupManager.PopupList.Count > 1); // 1 : basic , 2 : 추가되는 팝업
+            popup_Interact = PopupManager.PopupList[1].GetComponent<UIPopupInteract>();
+            _interactActive = true;
+        }
         private void HpValueChange()
         {
             // fillAmount의 최대값은 1 이니까 0.n 의 값이 나오도록 해야함
