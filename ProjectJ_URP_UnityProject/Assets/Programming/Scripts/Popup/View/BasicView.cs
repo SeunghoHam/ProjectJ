@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
         private void Start()
         {
             AddEvent();
+            DependuncyInjection.Inject(this);
         }
         private void AddEvent()
         {
@@ -30,6 +32,13 @@ namespace Assets.Scripts.UI.Popup.PopupView
                 //.Where(_ => )
                 .Subscribe(_ => HpValueChange())
                 .AddTo(gameObject);
+
+            this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ =>
+            {
+                //Debug.Log("E");
+                FlowManager.AddSubPopup(PopupStyle.Interact);
+            }
+            ).AddTo(gameObject);
         }
 
         private void HpValueChange()

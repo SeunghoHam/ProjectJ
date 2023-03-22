@@ -97,19 +97,8 @@ public class CharacterMovement : MonoBehaviour
             .ThrottleFrame(5)
             .Subscribe(x => _isGrounded = x);
     }
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.J))
-        {
-            _rotX += 10;
-        }
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
-            _rotX -= 10;
-        }
-    }
-    bool _isGrounded; // 좀 더 정밀도 높은 isGrounded
 
+    bool _isGrounded; // 좀 더 정밀도 높은 isGrounded
     void FixedUpdate()
     {
         AboutJump();

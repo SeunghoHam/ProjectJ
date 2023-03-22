@@ -6,6 +6,8 @@ using UniRx;
 using System;
 using System.Threading;
 using System.Linq;
+using Assets.Scripts.Common.DI;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.UI
 {
@@ -15,16 +17,18 @@ namespace Assets.Scripts.UI
         private const string PopupPrefix = "Prefabs/Popup/UIPopup";
 
         // = Field
-        public readonly List<PopupBase> PopupList = new List<PopupBase>();
+        public List<PopupBase> PopupList = new List<PopupBase>();
+        public readonly OnEventTrigger<PopupBase> LoadCompletePopup = new OnEventTrigger<PopupBase>();
 
         public override void Initialize()
         {
             base.Initialize();
+            DependuncyInjection.Inject(this);
         }
         public override void UnInitialize()
         {
             //base.UnInitialize();
-            foreach(var popup in PopupList) 
+            foreach (var popup in PopupList)
             {
                 Destroy(popup.gameObject);
             }
@@ -39,10 +43,11 @@ namespace Assets.Scripts.UI
         private IEnumerator Get<T>(IObserver<T> observer, CancellationToken cancelltationToken, PopupStyle style) where T : PopupBase
         {
             PopupBase popupBase = null;
-            yield return Observable.FromCoroutineValue<T>(() => 
+            yield return Observable.FromCoroutineValue<T>(() =>
             Get<T>(cancelltationToken, style))
                 .Where(popup => popup != null)
                 .StartAsCoroutine(popup => popupBase = popup);
+
             observer.OnNext(popupBase.GetComponent<T>());
             observer.OnCompleted();
         }
@@ -51,10 +56,10 @@ namespace Assets.Scripts.UI
             var popupName = GetPopupName(style);
             var popupBase = PopupList.Find(child => child.PopupStyle.Equals(style));
 
-            if(popupBase == null)
+            if (popupBase == null)
             {
                 var resource = Resources.LoadAsync<GameObject>(popupName);
-                while(!resource.isDone)
+                while (!resource.isDone)
                 {
                     if (token.IsCancellationRequested)
                         yield break;
@@ -65,7 +70,7 @@ namespace Assets.Scripts.UI
 
                 // 하위로 내려가며 가장 가까운 위치의 canvas 가져옴
                 var popupCanvas = popupBase.GetComponentInChildren<Canvas>();
-                if(popupBase as PopupSub)
+                if (popupBase as PopupSub)
                 {
                     // 카메라 할당 X 
                     popupCanvas.worldCamera = null;
@@ -91,30 +96,25 @@ namespace Assets.Scripts.UI
         }
 
         // Show
-        public IObservable<T> Show<T> (PopupStyle style, params object[] data) where T: PopupBase
+        public IObservable<T> Show<T>(PopupStyle style, params object[] data) where T : PopupBase
         {
-            return Observable.FromCoroutine<T>((observer,token)=>Show(observer,token,style,data)); // 인자가 4개인 Show 불러오기
+            return Observable.FromCoroutine<T>((observer, token) => Show(observer, token, style, data)); // 인자가 4개인 Show 불러오기
         }
-        private IEnumerator Show<T>(IObserver<T> observer, CancellationToken token, PopupStyle style, object[] data) where T: PopupBase 
+        private IEnumerator Show<T>(IObserver<T> observer, CancellationToken token, PopupStyle style, object[] data) where T : PopupBase
         {
-            /*
+            //yield return Get<T>(token, style);
+            /* 
+             yield return Observable.FromCoroutineValue<T>(() =>
+              Get<T>(token, style)).Where(popup => popup != null)
+                  .StartAsCoroutine(popup => popupBase = popup);*/
             yield return Get<T>(token, style);
-            Debug.Log("popuplist  : " + PopupList.Count);
-            PopupBase popupBase = PopupList[PopupList.Count-1];
-            //PopupBase popupBase = PopupList[0];
-            */
-            PopupBase popupBase = null;
-            yield return Get<T>(token, style);
-            popupBase = PopupList[0];
-            //yield return Observable.FromCoroutineValue<T>(() => Get<T>(token, style)).Where(popup => popup != null).StartAsCoroutine(popup => popupBase = popup);
+            PopupBase popupBase = PopupList[PopupList.Count - 1];
             popupBase.SetParent(transform);
             popupBase.Show(data);
             popupBase.gameObject.SetActive(true);
 
             observer.OnNext(popupBase.GetComponent<T>());
             observer.OnCompleted();
-
-            yield return null;
         }
 
         public void Hide(PopupStyle style)
@@ -126,14 +126,13 @@ namespace Assets.Scripts.UI
         // = Method
         private string GetPopupName(PopupStyle style)
         {
-            // Prefs/Popup/UIPopup  + style
-            return string.Format("{0}{1}", PopupPrefix, style); 
+            // Prefabs/Popup/UIPopup  + style
+            return string.Format("{0}{1}", PopupPrefix, style);
         }
         public List<PopupBase> GetShowingPopupList()
         {
-            Debug.Log("GetShowingPopupList");
             return PopupList.Where(@base => @base.IsActive).ToList();
         }
     }
-    
+
 }

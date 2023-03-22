@@ -9,8 +9,6 @@ public class PinTargetRange : MonoBehaviour
         {
             BattleManager.AddPinEnemy(other.GetComponent<Enemy>());
         }
-        //Character.AddEnemy(other.GetComponent<Enemy>());
-
     }
 
     private void OnTriggerExit(Collider other)
@@ -19,6 +17,5 @@ public class PinTargetRange : MonoBehaviour
         {
             BattleManager.RemovePinEnemy(other.GetComponent<Enemy>());
         }
-        //Character.RemoveEnemy(other.GetComponent<Enemy>());
     }
 }

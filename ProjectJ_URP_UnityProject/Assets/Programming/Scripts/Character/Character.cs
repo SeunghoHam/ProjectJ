@@ -15,6 +15,8 @@ public class Character : UnitBase
     
     private int _maxHP = 10;
     private int _curHP;
+
+    // 값이 변경될 때 마다 BasicView에서 hpStatus 변경함
     public int MaxHP
     {
         get { return _maxHP; }

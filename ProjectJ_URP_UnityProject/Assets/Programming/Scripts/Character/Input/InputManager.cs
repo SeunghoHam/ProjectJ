@@ -40,7 +40,7 @@ public class InputManager : MonoBehaviour
         var runStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftShift)).Subscribe(_ => Run());
         var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift)).Subscribe(_ => RunCancel());
 
-        var itemGetStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ => GetPosition());
+        var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPosition()); // 물약
         //var changeMdoeStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => ChangeWeaponState());
 
         // 롱클릭
@@ -58,7 +58,7 @@ public class InputManager : MonoBehaviour
             .Where(time => time < 3.0f)
             .Subscribe(t =>
             {
-                Debug.Log("롱클릭 취소");
+                //Debug.Log("롱클릭 취소");
                 _curChargeTime = (float)t;
                 Attack();
             });
@@ -72,22 +72,6 @@ public class InputManager : MonoBehaviour
     }
 
 
-
-    private void ChangeWeaponState()
-    {
-        if (Character.Instance.weaponState == Character.WeaponState.Normal)
-        {
-            Character.Instance.weaponState = Character.WeaponState.Sword;
-            Animator.IsStateChnaging = true;
-            //Animator.animator.layer
-        }
-        else
-        {
-            Character.Instance.weaponState = Character.WeaponState.Normal;
-            Animator.IsStateChnaging = true;
-        }
-        DebugManager.ins.Log("현재 weaponMode 는 " + Character.Instance.weaponState.ToString(), DebugManager.TextColor.Blue);
-    }
     /// <summary>
     /// Attack으로 하나 묶어서 해버리는게 손해인가?
     /// </summary>
@@ -117,7 +101,7 @@ public class InputManager : MonoBehaviour
     {
         if (!Animator.CanAttack || Animator.AnimState == CharacterAnimator.ChaAnimState.Roll)
         {
-            Debug.Log("공격 반환당함");
+            //Debug.Log("공격 반환당함");
             return;
         }
 
@@ -143,20 +127,20 @@ public class InputManager : MonoBehaviour
     }
     public void Attack_Charge()
     {
-        DebugManager.ins.Log("차지 공격 " + _curChargeTime + "초 차징함", DebugManager.TextColor.Yellow);
+        //DebugManager.ins.Log("차지 공격 " + _curChargeTime + "초 차징함", DebugManager.TextColor.Yellow);
     }
     public void Attack_Ready()
     {
-        DebugManager.ins.Log("우클릭 후 공격", DebugManager.TextColor.Yellow);
+        //DebugManager.ins.Log("우클릭 후 공격", DebugManager.TextColor.Yellow);
     }
     public void Ready() // 우클릭 동작
     {
-        DebugManager.ins.Log("준비 자세", DebugManager.TextColor.Red);
+        //DebugManager.ins.Log("준비 자세", DebugManager.TextColor.Red);
         _isReady = true;
     }
     public void ReadyCancel()
     {
-        DebugManager.ins.Log("준비 취소", DebugManager.TextColor.Red);
+        //DebugManager.ins.Log("준비 취소", DebugManager.TextColor.Red);
         _isReady = false;
     }
 
@@ -201,26 +185,21 @@ public class InputManager : MonoBehaviour
 
     public void PinTarget()
     {
-        
-        if (BattleManager.GetPinEnemyList().Count >= 1)
+        if (Movement.IsPin) // Pin 활성화 되어있음
         {
-            if (Movement.IsPin) // Pin 활성화 되어있음
+            if (BattleManager.GetPinEnemyList().Count >= 1)
             {
-                //DebugManager.ins.Log("타겟 활성화 해제하기", DebugManager.TextColor.White);
                 Movement.SetPinEnemy(null); // movement의 pinTarget 지우기
                 Movement.IsPin = false;
             }
-            else // Pikkn 활성화가 안되어있을 때
+        }
+        else // Pikkn 활성화가 안되어있을 때
+        {
+            if (BattleManager.GetPinEnemyList().Count >= 1)
             {
-                //DebugManager.ins.Log("타겟 활성화 시키기", DebugManager.TextColor.White);
                 Movement.SetPinEnemy(BattleManager.GetPinEnemyList()[0]);
                 Movement.IsPin = true;
             }
-        }
-        else
-        {
-            //DebugManager.ins.Log("리스트 비어서 동작 안함 ㅅㄱ", DebugManager.TextColor.White);
-            Movement.IsPin = false;
         }
     }
 }

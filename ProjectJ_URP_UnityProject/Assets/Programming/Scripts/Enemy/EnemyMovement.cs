@@ -31,8 +31,6 @@ public class EnemyMovement : MonoBehaviour
         animator = Anim;
     }
 
-
-
     private void FixedUpdate()
     {
         if (target == null)
@@ -57,7 +55,7 @@ public class EnemyMovement : MonoBehaviour
     }
     public IEnumerator AI_Doing_JumpAttack()
     {
-        animator.Anim_Jump();
+        //animator.Anim_Jump(); // 점프 모션이 되게 이상함
         rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         //MoveAttack();
 
@@ -70,7 +68,7 @@ public class EnemyMovement : MonoBehaviour
     }
     public IEnumerator AI_Doing_Jump()
     {
-        animator.Anim_Jump();
+        //animator.Anim_Jump();
         rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         yield return new WaitForSeconds(1f);
     }

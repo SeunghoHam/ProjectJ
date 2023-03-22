@@ -67,6 +67,7 @@ public class Enemy : UnitBase
         {
             Debug.Log("적이 주거써");
             animator.Anim_Death();
+            this.GetComponent<BoxCollider>().enabled = false;
         }
         else
         {

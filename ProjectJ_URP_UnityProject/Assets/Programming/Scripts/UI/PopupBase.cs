@@ -1,8 +1,4 @@
-using Assets.Scripts.Manager;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UniRx;
 using UnityEngine;
 
@@ -16,15 +12,15 @@ namespace Assets.Scripts.UI
         {
             get
             {
-                if (!PopupStyle.Equals(PopupStyle.None))
+                if (!_popupStyle.Equals(PopupStyle.None))
                     return _popupStyle;
 
-                var popupName = gameObject.name;
+                var popupName = gameObject.name; // 호출 대상의 이름 가져옴
                 popupName = popupName.Replace("UIPopup", "");
                 popupName = popupName.Replace("(Clone)", "");
                 try
                 {
-                    _popupStyle = (PopupStyle)System.Enum.Parse(typeof(PopupStyle), popupName);
+                    _popupStyle = (PopupStyle)Enum.Parse(typeof(PopupStyle), popupName);
                 }
                 catch (Exception)
                 {
@@ -41,23 +37,22 @@ namespace Assets.Scripts.UI
         {
             get { return gameObject.activeInHierarchy; }
         }
+        public bool IsIgnoreEscapeHide { get; set; }
         private void Awake()
         {
             Initialize();
         }
 
         public virtual void Initialize()
-        {
-        }
+        { }
         public virtual void UnInitialize()
-        {
-        }
+        { }
 
         public virtual void Show(params object[] data)
         {
+            DebugManager.ins.Log("PouppBase Show : " + gameObject.name, DebugManager.TextColor.Blue);
             if (CancelerObject != null)
                 CancelerObject.Dispose();
-            DebugManager.ins.Log("PouppBase Show : " + gameObject.name, DebugManager.TextColor.Blue);
             CancelerObject = new CompositeDisposable();
             gameObject.SetActive(true); // 활성화시킴
         }

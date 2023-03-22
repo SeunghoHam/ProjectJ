@@ -4,6 +4,7 @@ namespace Assets.Scripts.UI
     {
         None = 0,
         Basic,
+        Interact,
         Pause,
         Inventory,
     }

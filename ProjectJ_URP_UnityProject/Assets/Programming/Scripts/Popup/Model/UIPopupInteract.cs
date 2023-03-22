@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using Assets.Scripts.Common.DI;
 using UnityEngine;
 using Assets.Scripts.UI.Popup.PopupView;
-using Assets.Scripts.Util;
 
 namespace Assets.Scripts.UI.Popup.Base
 {
-    public class UIPopupBasic : PopupBase
+    public class UIPopupInteract : PopupBase
     {
         [DependuncyInjection(typeof(FlowManager))]
         private FlowManager _flowManager;
@@ -17,9 +16,7 @@ namespace Assets.Scripts.UI.Popup.Base
         [DependuncyInjection(typeof(ResourcesManager))]
         private ResourcesManager _resourcesManager;
 
-        [SerializeField] private BasicView _basicView;
-
-        public readonly OnEventTrigger<PopupBase> LoadCompletePopup = new OnEventTrigger<PopupBase>();
+        [SerializeField] private InteractView _basicView;
 
         public override void Initialize()
         {
@@ -29,7 +26,10 @@ namespace Assets.Scripts.UI.Popup.Base
             _basicView.FlowManager = _flowManager;
             _basicView.ResourcesManager = _resourcesManager;
         }
-
+        public override void UnInitialize()
+        {
+            base.UnInitialize();
+        }
         public override void Show(params object[] data)
         {
             base.Show(data);
