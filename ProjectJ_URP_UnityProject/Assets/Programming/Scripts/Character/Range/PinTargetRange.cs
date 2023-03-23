@@ -1,9 +1,9 @@
 using Assets.Scripts.Manager;
 using UnityEngine;
 
-public class PinTargetRange : MonoBehaviour
+public class PinTargetRange : RangeSystem
 {
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
@@ -11,7 +11,7 @@ public class PinTargetRange : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    protected override void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {

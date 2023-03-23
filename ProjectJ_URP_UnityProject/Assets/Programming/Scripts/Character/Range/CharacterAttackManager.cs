@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterAttackManager : MonoBehaviour
+public class CharacterAttackManager : RangeSystem
 {
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
@@ -13,8 +13,7 @@ public class CharacterAttackManager : MonoBehaviour
         }
         else return;
     }
-
-    private void OnTriggerExit(Collider other)
+    protected override void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {

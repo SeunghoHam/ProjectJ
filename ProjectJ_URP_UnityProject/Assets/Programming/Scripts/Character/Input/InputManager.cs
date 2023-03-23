@@ -20,8 +20,8 @@ public class InputManager : MonoBehaviour
     private bool _isContinuous; // 연속공격을 하면 되는지
     private void Start()
     {
-        Animator = Character.Instance.characterAnimator;
-        Movement = Character.Instance.characterMovement;
+        Animator = Character.Instance.Animator;
+        Movement = Character.Instance.Movement;
         weaponController = Character.Instance.weaponController;
 
         InputSetting();
@@ -40,7 +40,8 @@ public class InputManager : MonoBehaviour
         var runStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftShift)).Subscribe(_ => Run());
         var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift)).Subscribe(_ => RunCancel());
 
-        var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPosition()); // 물약
+        // 물약 회복 -> BasicView로 이동
+        // Interact활성화 -> BasicView로 이동
         //var changeMdoeStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => ChangeWeaponState());
 
         // 롱클릭
@@ -99,12 +100,14 @@ public class InputManager : MonoBehaviour
 
     public void Attack_Normal()
     {
+        if (Character.Instance.IsInteract)
+            return;
+
         if (!Animator.CanAttack || Animator.AnimState == CharacterAnimator.ChaAnimState.Roll)
         {
             //Debug.Log("공격 반환당함");
             return;
         }
-
         Animator.CanAttack = false;
         //if (Animator.AnimState != CharacterAnimator.ChaAnimState.SeriesAttackReady) // 연속공격 중이 아님 ( 1타 ) 
         if(Animator.AttackCount == 0)
@@ -156,6 +159,8 @@ public class InputManager : MonoBehaviour
     }
     public void Jump()
     {
+        if (Character.Instance.IsInteract)
+            return;
         if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle) //|| !Animator.IsJumping)
         {
             Animator.AnimState = CharacterAnimator.ChaAnimState.Jump;
@@ -167,6 +172,8 @@ public class InputManager : MonoBehaviour
     }
     public void Roll()
     {
+        if (Character.Instance.IsInteract)
+            return;
         if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//) &&!Animator.IsRolling)
         {
             Animator.AnimState = CharacterAnimator.ChaAnimState.Roll;
@@ -178,13 +185,10 @@ public class InputManager : MonoBehaviour
         //else
         //DebugManager.ins.Log("애니메이션 동작중", DebugManager.TextColor.White);
     }
-    public void GetPosition()
-    {
-        DebugManager.ins.Log("물약 먹기", DebugManager.TextColor.White);
-    }
-
     public void PinTarget()
     {
+        if (Character.Instance.IsInteract)
+            return;
         if (Movement.IsPin) // Pin 활성화 되어있음
         {
             if (BattleManager.GetPinEnemyList().Count >= 1)

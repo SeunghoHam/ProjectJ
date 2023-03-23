@@ -21,14 +21,21 @@ namespace Assets.Scripts.UI.Popup.PopupView
         public PopupManager PopupManager { get; set; }
 
         public UIPopupInteract popup_Interact;
-       
+
         [SerializeField] Image _hpValue;
         [SerializeField] Image _mpValue;
 
+        [SerializeField] GameObject _interactObject; // 상호작용 가능 할 때 활성화시킬 오브젝트
+
         private void Start()
         {
+            Init();
             AddEvent();
             DependuncyInjection.Inject(this);
+        }
+        private void Init()
+        {
+            _interactObject.SetActive(false);
         }
         private void AddEvent()
         {
@@ -42,23 +49,33 @@ namespace Assets.Scripts.UI.Popup.PopupView
                 Interact();
             }
             ).AddTo(gameObject);
+
+            var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPotion()); // 물약
         }
 
         private bool _interactActive = false;
         private void Interact()
         {
-            if(!_interactActive)
+            // 캐릭터가 축복 범위에 있단 것을 반환
+            if (!Character.Instance.CanInteract)
+                return;
+
+            if (!_interactActive)
             {
+                // 활성화
                 FlowManager.AddSubPopup(PopupStyle.Interact);
                 StartCoroutine(InteractSettingRoutine());
-                //BattleManager.Instance.CursorVisible(true);
+                Character.Instance.IsInteract = true;
+                BattleManager.Instance.CusrorVisible(true);
             }
             else
             {
+                // 비활성화
                 popup_Interact.Hide();
                 popup_Interact = null;
                 _interactActive = false;
-                //BattleManager.Instance.CursorVisible(false);
+                Character.Instance.IsInteract = false;
+                BattleManager.Instance.CusrorVisible(false);
             }
         }
         private IEnumerator InteractSettingRoutine()
@@ -67,11 +84,20 @@ namespace Assets.Scripts.UI.Popup.PopupView
             popup_Interact = PopupManager.PopupList[1].GetComponent<UIPopupInteract>();
             _interactActive = true;
         }
+
+        public void IntearctActive(bool ison)
+        {
+            _interactObject.SetActive(ison);
+        }
         private void HpValueChange()
         {
             // fillAmount의 최대값은 1 이니까 0.n 의 값이 나오도록 해야함
             //_hpValue.fillAmount = (float)Character.Instance.CurHP / (float)Character.Instance.MaxHP; // 최대값이 1
             _hpValue.DOFillAmount((float)Character.Instance.CurHP / (float)Character.Instance.MaxHP, 0.2f);
+        }
+        private void GetPotion()
+        {
+            DebugManager.ins.Log("물약 먹음", DebugManager.TextColor.Blue);
         }
 
     }

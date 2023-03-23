@@ -49,7 +49,7 @@ public class Enemy : UnitBase
 
     public void BattleStart()
     {
-        Debug.Log("전투 시작");
+        //Debug.Log("전투 시작");
 
         // AI 활성화
         //enemyBT.BT_Setting();

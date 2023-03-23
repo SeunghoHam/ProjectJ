@@ -18,7 +18,7 @@ namespace Assets.Scripts.UI.Popup.Base
 
         [DependuncyInjection(typeof(PopupManager))]
         private PopupManager _popupManager;
-        [SerializeField] private BasicView _basicView;
+        public BasicView _basicView;
 
         public override void Initialize()
         {

@@ -6,8 +6,8 @@ public class Character : UnitBase
 {
     // PinTarget
     public PinTargetRange pinTargetRange;
-    public CharacterMovement characterMovement;
-    public CharacterAnimator characterAnimator;
+    public CharacterMovement Movement;
+    public CharacterAnimator Animator;
     public CameraSystem cameraSystem;
     public WeaponController weaponController;
 
@@ -15,6 +15,34 @@ public class Character : UnitBase
     
     private int _maxHP = 10;
     private int _curHP;
+
+    #region ::: Interact :::
+
+    private bool _canInteract = false;
+    public bool CanInteract
+    {
+        get { return _canInteract; }
+        set 
+        {
+            if(_canInteract != value)
+                _canInteract = value;
+        }
+    }
+    private bool _isInteract = false;
+    public bool IsInteract
+    {
+        get { return _isInteract; }
+        set
+        {
+            if(_isInteract != value)
+            {
+                Animator.Anim_Idle();
+                _isInteract = value;
+            }
+        }
+    }
+
+    #endregion
 
     // 값이 변경될 때 마다 BasicView에서 hpStatus 변경함
     public int MaxHP
@@ -45,11 +73,8 @@ public class Character : UnitBase
     private int _attackDamage = 1;
     public int AttackDamage
     { get{ return _attackDamage; } }
-    private void Awake()
-    {
-        Instance = this;
-        _curHP = _maxHP;
-    }
+    
+
     public CameraSystem GetCameraSystem
     {
         get { return cameraSystem; }
@@ -59,6 +84,12 @@ public class Character : UnitBase
         }
     }
 
+
+    private void Awake()
+    {
+        Instance = this;
+        _curHP = _maxHP;
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Y))
