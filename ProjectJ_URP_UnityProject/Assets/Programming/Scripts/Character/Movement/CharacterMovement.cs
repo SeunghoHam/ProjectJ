@@ -88,7 +88,7 @@ public class CharacterMovement : MonoBehaviour
     {
         controller = this.gameObject.GetComponent<CharacterController>();
 
-        animator = Character.Instance.characterAnimator;
+        animator = Character.Instance.Animator;
         cameraSystem = Character.Instance.cameraSystem;
         CursurSetting();
 
@@ -101,18 +101,23 @@ public class CharacterMovement : MonoBehaviour
     bool _isGrounded; // 좀 더 정밀도 높은 isGrounded
     void FixedUpdate()
     {
-        AboutJump();
-        AboutRoll();
-        GetInput();
-        Movement();
-        WalkBlend();
+        // 상호작용 중이라면 반환시켜야함
+        if (!Character.Instance.IsInteract)
+        {
+            GetInput();
+            Movement();
+            WalkBlend();
+            
+            if (!_isPin)
+                MouseRotator();
+            else
+                PinRotator();
 
-        if (!_isPin)
-            MouseRotator();
-        else
-            PinRotator();
-
-        cameraSystem._targetPoint_xValue = _targetPoint.localRotation.x;
+            AboutJump();
+            AboutRoll();
+            cameraSystem._targetPoint_xValue = _targetPoint.localRotation.x;
+        }
+        
         //cameraSystem._targetPoint_xValue = _xTargetRotation.x;
     }
 
@@ -175,7 +180,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Movement()
     {
-        if (animator.ReturnCanMove())
+        if (animator.CanMove())
         {
             controller.Move(_yTargetRotation // 마우스 회전(targetPoint)
             * direction // 바라보는 방향

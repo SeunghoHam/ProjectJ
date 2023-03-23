@@ -18,7 +18,6 @@ namespace Assets.Scripts.UI
 
         // = Field
         public List<PopupBase> PopupList = new List<PopupBase>();
-        public readonly OnEventTrigger<PopupBase> LoadCompletePopup = new OnEventTrigger<PopupBase>();
 
         public override void Initialize()
         {

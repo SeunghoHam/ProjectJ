@@ -95,6 +95,21 @@ namespace Assets.Scripts.Manager
         {
 
         }
+
+
+        public void CusrorVisible(bool ison)
+        {
+            if(ison)
+            {
+                Cursor.visible = ison;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
         public override void Initialize()
         {
             base.Initialize();

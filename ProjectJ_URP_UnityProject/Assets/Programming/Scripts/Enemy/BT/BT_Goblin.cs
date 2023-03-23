@@ -6,7 +6,7 @@ public class BT_Goblin : EnemyBTBase
 {
     private void Awake()
     {
-        Debug.Log("고블린 AI 활성화");
+        //Debug.Log("고블린 AI 활성화");
         movement = this.GetComponent<EnemyMovement>();
     }
 

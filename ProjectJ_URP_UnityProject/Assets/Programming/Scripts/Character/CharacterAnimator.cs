@@ -40,6 +40,8 @@ public class CharacterAnimator : MonoBehaviour
         Jump, // 점프,
         Roll, //  구르기
         Attack, // 공격중
+        Heal, // 회복모션중
+
         //SeriesAttackReady, // 연속공격 준비
     }
     
@@ -50,9 +52,17 @@ public class CharacterAnimator : MonoBehaviour
 
     /// <summary> 점프나 아무것도 안할때만 이동되도록함 </summary>
     /// <returns>Idle, Jump </returns>
-    public bool ReturnCanMove()
+    public bool CanMove()
     {
         return AnimState == ChaAnimState.Idle || AnimState == ChaAnimState.Jump;
+    }
+    public bool CanAttak()
+    {
+        return AnimState == ChaAnimState.Idle;
+    }
+    public bool CanHeal()
+    {
+        return AnimState == ChaAnimState.Idle;
     }
 
     #endregion
@@ -106,7 +116,8 @@ public class CharacterAnimator : MonoBehaviour
     }
     public void Anim_Idle()
     {
-        _animator.SetTrigger("Idle");
+        //_animator.SetTrigger("Idle");
+        _animator.SetFloat("WalkBlend", 0f);
     }
 
 
