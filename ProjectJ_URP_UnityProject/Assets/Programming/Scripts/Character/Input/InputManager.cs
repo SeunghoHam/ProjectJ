@@ -174,16 +174,13 @@ public class InputManager : MonoBehaviour
     {
         if (Character.Instance.IsInteract)
             return;
+
         if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//) &&!Animator.IsRolling)
         {
             Animator.AnimState = CharacterAnimator.ChaAnimState.Roll;
-            Animator.IsRolling = true;
-            //DebugManager.ins.Log("구르기 애니메이션", DebugManager.TextColor.Blue);
             Animator.Anim_Roll();
             Movement.RollMove();
         }
-        //else
-        //DebugManager.ins.Log("애니메이션 동작중", DebugManager.TextColor.White);
     }
     public void PinTarget()
     {

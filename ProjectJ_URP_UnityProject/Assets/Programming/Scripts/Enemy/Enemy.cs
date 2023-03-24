@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,12 +14,13 @@ public class Enemy : UnitBase
 
     public EnemyBTBase enemyBT;
 
+    /*
     public enum EnemyType
     {
         Normal, // 공격 범위 1개(기본)
-        Boss, // 공격 범위 여러개(기본, 점프공격 등등)
+        Boss, 
     }
-    public EnemyType enemyType;
+    public EnemyType enemyType;*/
 
     [SerializeField] private List<EnemyAttackRange> enemyAttackRange = new List<EnemyAttackRange>();
 
@@ -60,7 +60,6 @@ public class Enemy : UnitBase
     private void Awake()
     {
         EnemyInitilaize();
-        BattleStart();
     }
 
     /// <summary> EnemyData 에서 가져온 정보로 할당하기 </summary>
@@ -78,18 +77,28 @@ public class Enemy : UnitBase
             enemyAttackRange[i].GetEnemy(this);
         }
     }
-    public void BattleStart()
-    {
-
-    }
     #region Battle
     public override void Attack()
     {
-
-        if(enemyType == EnemyType.Boss)
+        
+        if( _data._type == EnemyData.EnemyType.Boss)
         {
             // 어떤 공격인지 정해줘야함
-            RangeType(EnemyAttackRange.RangeType.Melee);   
+            int attack = 0;
+            switch (attack)
+            {
+                case 0:
+                    // 기본 평타
+                    RangeType(EnemyAttackRange.RangeType.Melee);
+                    break;
+                case 1:
+                    // 점프공격
+                    RangeType(EnemyAttackRange.RangeType.Jump);
+                    break;
+                default:
+                    RangeType(EnemyAttackRange.RangeType.Melee);
+                    break;
+            }
         }
         animator.Anim_Attack1();
         base.Attack();

@@ -373,8 +373,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 81aa450735928ee4988f14a66727fe0c, type: 2}
   animator: {fileID: 4724630381275842865}
   movement: {fileID: 805742603}
-  enemyBT: {fileID: 0}
-  enemyType: 1
+  enemyBT: {fileID: 805742602}
   enemyAttackRange:
   - {fileID: 8318084020330228508}
   - {fileID: 2073025541720597815}

@@ -49,9 +49,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
             this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ =>
             {
                 Interact();
-            }
-            ).AddTo(gameObject);
-
+            }).AddTo(gameObject);
             var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPotion()); // 물약
         }
 
@@ -59,9 +57,11 @@ namespace Assets.Scripts.UI.Popup.PopupView
         private void Interact()
         {
             // 캐릭터가 축복 범위에 있단 것을 반환
-            if (!Character.Instance.CanInteract)
+            if (!Character.Instance.CanInteract ||
+                Character.Instance.Animator.AnimState != CharacterAnimator.ChaAnimState.Idle)
                 return;
 
+            // 앉기 모션 후에 창 활성화 되도록 해야함
             if (!_interactActive)
             {
                 // 활성화

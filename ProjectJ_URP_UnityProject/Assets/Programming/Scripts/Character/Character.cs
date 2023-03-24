@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Character : UnitBase
 {
-    // PinTarget
     public PinTargetRange pinTargetRange;
     public CharacterMovement Movement;
     public CharacterAnimator Animator;

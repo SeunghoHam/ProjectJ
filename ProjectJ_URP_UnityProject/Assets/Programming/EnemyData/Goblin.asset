@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   _name: "\uACE0\uBE14\uB9B0"
-  _rare: 0
+  _type: 1
   _hp: 2
   _damage: 1

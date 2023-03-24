@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx.Triggers;
 using UnityEngine;
 using static CharacterAnimator;
 
@@ -12,9 +13,14 @@ public class EnemyAnimator : MonoBehaviour
         get { return _animator; }
     }
 
+
+
+    // PlayerState
+    private CharacterAnimator _characterAnimator;
     private void Awake()
     {
         _animator = this.GetComponent<Animator>();
+        _characterAnimator = Character.Instance.Animator;
     }
     public void GetEnemy(Enemy enemy)
     {
@@ -42,7 +48,17 @@ public class EnemyAnimator : MonoBehaviour
     public void Anim_DamagePoint() // 데미지를 넣는 순간
     {
         if(_enemy.CanHit)
-            Character.Instance.Damaged(1);
+        {
+            if (_characterAnimator.IsRolling)
+            {
+                DebugManager.ins.Log("회피 성공", DebugManager.TextColor.Blue);
+            }
+            else 
+            {
+                DebugManager.ins.Log("회피 실패", DebugManager.TextColor.Red);
+                Character.Instance.Damaged(1);
+            }
+        }
     }
 
     public void Anim_Damaged()

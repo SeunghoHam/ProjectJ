@@ -95,6 +95,7 @@ public class CharacterAnimator : MonoBehaviour
         //weaponController = Character.Instance.weaponController;
     }
 
+    #region ::: Walk :::
     public void Blend_Walk(float value)
     {
         _animator.SetFloat("WalkBlend", value);
@@ -104,11 +105,21 @@ public class CharacterAnimator : MonoBehaviour
         animator.SetFloat("DirX", dirx);
         animator.SetFloat("DirY", diry);
     }
+    #endregion
 
+    #region ::: Roll :::
     public void Anim_Roll()
     {
         _animator.SetTrigger("Roll");
+        IsRolling = true;
     }
+    public void End_Anim_Roll()
+    {
+        IsRolling = false;
+        AnimState = ChaAnimState.Idle;
+    }
+    #endregion
+
 
     public void Anim_Jump()
     {
@@ -173,12 +184,7 @@ public class CharacterAnimator : MonoBehaviour
     }
     #endregion
 
-
-    public void End_Anim_Roll() // 애니메이터 클립에 할당할거
-    {
-        IsRolling = false;
-        AnimState = ChaAnimState.Idle;
-    }
+    
     public void End_Anim_Jump() // 완전한 애니메이션 종료를 의미
     {
         AnimState = ChaAnimState.Idle;

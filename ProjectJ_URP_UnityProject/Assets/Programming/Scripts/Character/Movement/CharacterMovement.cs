@@ -34,7 +34,6 @@ public class CharacterMovement : MonoBehaviour
     private Quaternion _xTargetRotation;
     private Quaternion _yTargetRotation;
 
-
     // Attack
     private bool _isAttacking; // 공격중인 상태에서는 움직임 막기
 
@@ -147,17 +146,24 @@ public class CharacterMovement : MonoBehaviour
             // 동작이 있는 경우에 Aniamtor의 WalkValue를 0 초과로 만들어야함
             if (_isPin) // 타겟 고정 활성화
             {
+                // 오른쪽 _iroha.y = 90 . 왼쪽 _iroha.y = -90
+
+                /*
                 if (animator.IsJumping)
                     _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
                 else
-                    _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed * 0.5f, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);
+                    _currentSpeed = Mathf.SmoothDamp(_currentSpeed, moveSpeed * 0.5f, ref _speedSmoothVelocity, _speedSmoothTime * Time.deltaTime);*/
+                //controller.Move(_targetPoint.localRotation * direction * _currentSpeed * Time.deltaTime);
+                Quaternion target = Quaternion.Euler(0,direction.x * 90f, 0);
+                /*
+                _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation,
+                       target , rotateSpeed * Time.deltaTime);*/
+                //_iroha.transform.localRotation = target;
 
-                controller.Move(_targetPoint.localRotation * direction * _currentSpeed * Time.deltaTime);
-                Quaternion target = Quaternion.Euler(0, _targetPoint.transform.localEulerAngles.y, 0);
-                _iroha.transform.localRotation = target;
             }
             else // 타겟 고정 비활성화
             {
+
                 // 키를 누른 방향으로 _iroha의 회전 변경되도록 해야함 이로하만 y 회전 +90
                 Quaternion horizontal = Quaternion.Euler(0, direction.normalized.x * 90f, 0); // 좌 우 회전
                 //Quaternion vertical = Quaternion.Euler(0, direction.normalized.z * -180f, 0); // 앞 뒤 회전
@@ -232,14 +238,18 @@ public class CharacterMovement : MonoBehaviour
             , null).SetEase(Ease.Linear);
 
         Quaternion yValue = Quaternion.Euler(0, _targetPoint.localEulerAngles.y, 0);
-        _iroha.transform.localRotation = Quaternion.Slerp(_iroha.transform.localRotation, yValue, 1f);
+        _iroha.transform.localRotation = yValue;
+            //Quaternion.Slerp(_iroha.transform.localRotation, yValue, 1f);
 
+        // new : yTargetRotation이 MouseRotator()에서만 변경되서 그랬음
+        _yTargetRotation = _iroha.transform.localRotation;
         // MouseRotator에서 저장된 Quaternion 값이 Pin 취소되었을 때 돌아가면서 문제가 생김.
-        //saveValue 
+        //saveValue
     }
 
     public void RollMove()
     {
+        
         _rollDir = new Vector3(_iroha.transform.forward.x,
             _iroha.transform.position.y,
             _iroha.transform.forward.z);
