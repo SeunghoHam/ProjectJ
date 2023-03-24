@@ -8,14 +8,16 @@ public class BT_Goblin : EnemyBTBase
     {
         //Debug.Log("고블린 AI 활성화");
         movement = this.GetComponent<EnemyMovement>();
+        enemy = this.GetComponent<Enemy>();
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.U))
         {
-            DebugManager.ins.Log("AI동작 : 점프", DebugManager.TextColor.Yellow);
-            StartCoroutine(movement.AI_Doing_Jump());
+            DebugManager.ins.Log("AI동작 : 공격", DebugManager.TextColor.Yellow);
+            //StartCoroutine(movement.AI_Doing_Jump());
+            enemy.Attack();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {

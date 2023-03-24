@@ -6,7 +6,9 @@ using UniRx.Triggers;
 
 public class EnemyBTBase : MonoBehaviour
 {
+    // 현재 할당된 Enemy를 받아오기
     protected EnemyMovement movement;
+    protected Enemy enemy;
     public void BT_Setting()
     {
         if (AIRoutine != null)

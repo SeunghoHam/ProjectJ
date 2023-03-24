@@ -10,7 +10,7 @@ public class InteractRange : RangeSystem
         if (other.CompareTag("Interact"))
         {
             Character.Instance.CanInteract = true;
-            PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.IntearctActive(true);
+            PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.PopupActive(true);
         }
         else return;
     }
@@ -19,7 +19,7 @@ public class InteractRange : RangeSystem
         if (other.CompareTag("Interact"))
         {
             Character.Instance.CanInteract = false;
-            PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.IntearctActive(false);
+            PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.PopupActive(false);
         }
         else return;
     }

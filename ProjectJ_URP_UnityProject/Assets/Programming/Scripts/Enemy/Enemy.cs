@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,19 +13,38 @@ public class Enemy : UnitBase
     public EnemyAnimator animator;
     public EnemyMovement movement;
 
-    [HideInInspector] 
     public EnemyBTBase enemyBT;
 
+    public enum EnemyType
+    {
+        Normal, // 공격 범위 1개(기본)
+        Boss, // 공격 범위 여러개(기본, 점프공격 등등)
+    }
+    public EnemyType enemyType;
+
+    [SerializeField] private List<EnemyAttackRange> enemyAttackRange = new List<EnemyAttackRange>();
 
     [Space(20)]
     [Header("플레이어 시점 고정")]
     [SerializeField] private Transform _pinTarget; // 고정시킬 오브젝트(바라보는거)
-    [SerializeField] private MeshRenderer _pinObject; // 고정되어있다면 활성화 시킬 오브젝트
+    [SerializeField] private MeshRenderer _pinObject; // 고정되어있다면 활성화 시킬 오브젝트 (테스트용임)
 
 
     [Space(10)]
     [Header("보스 상황")]
     [SerializeField] private int _hp;
+
+
+    private bool _canHit = false;
+    public bool CanHit
+    {
+        get { return _canHit; }
+        set 
+        {
+            if (_canHit != value)
+                _canHit = value;
+        }
+    }
 
     private bool _canAvoid = false;
     public bool CanAvoid
@@ -34,31 +56,55 @@ public class Enemy : UnitBase
                 _canAvoid = value;
         }
     }
+
     private void Awake()
     {
         EnemyInitilaize();
         BattleStart();
     }
+
+    /// <summary> EnemyData 에서 가져온 정보로 할당하기 </summary>
     private void EnemyInitilaize()
     {
         movement.Initialize(animator);
+        animator.GetEnemy(this);
         _pinObject.enabled = false;
         _hp = _data._hp;
         enemyBT = this.GetComponent<EnemyBTBase>();
-    }
 
+        // RangeSetting
+        for (int i = 0; i < enemyAttackRange.Count; i++)
+        {
+            enemyAttackRange[i].GetEnemy(this);
+        }
+    }
     public void BattleStart()
     {
-        //Debug.Log("전투 시작");
 
-        // AI 활성화
-        //enemyBT.BT_Setting();
     }
     #region Battle
     public override void Attack()
     {
+
+        if(enemyType == EnemyType.Boss)
+        {
+            // 어떤 공격인지 정해줘야함
+            RangeType(EnemyAttackRange.RangeType.Melee);   
+        }
         animator.Anim_Attack1();
         base.Attack();
+    }
+    private void RangeType(EnemyAttackRange.RangeType rangeType)
+    {
+        for (int i = 0; i < enemyAttackRange.Count; i++)
+        {
+            if (enemyAttackRange[i].rangeType == rangeType)
+            {
+                enemyAttackRange[i].SetColliderEnable(true);
+            }
+            else
+                enemyAttackRange[i].SetColliderEnable(false);
+        }
     }
     public override void Damaged(int damage)
     {

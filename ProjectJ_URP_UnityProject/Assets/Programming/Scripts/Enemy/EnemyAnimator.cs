@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterAnimator;
 
 public class EnemyAnimator : MonoBehaviour
 {
+    private Enemy _enemy;
     private Animator _animator;
     public Animator animator
     {
@@ -13,6 +15,10 @@ public class EnemyAnimator : MonoBehaviour
     private void Awake()
     {
         _animator = this.GetComponent<Animator>();
+    }
+    public void GetEnemy(Enemy enemy)
+    {
+        _enemy = enemy;
     }
     public enum EnemyAnimState 
     { 
@@ -33,6 +39,12 @@ public class EnemyAnimator : MonoBehaviour
     {
         _animator.SetTrigger("Attack3");
     }
+    public void Anim_DamagePoint() // 데미지를 넣는 순간
+    {
+        if(_enemy.CanHit)
+            Character.Instance.Damaged(1);
+    }
+
     public void Anim_Damaged()
     {
         _animator.SetTrigger("Damaged");
@@ -46,5 +58,8 @@ public class EnemyAnimator : MonoBehaviour
         _animator.SetTrigger("Death");
     }
 
-    
+    public void End_Anim_Slash()
+    {
+        // AI 루틴 다시 동작하도록
+    }
 }

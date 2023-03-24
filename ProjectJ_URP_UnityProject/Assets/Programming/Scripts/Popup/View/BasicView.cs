@@ -26,6 +26,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
         [SerializeField] Image _mpValue;
 
         [SerializeField] GameObject _interactObject; // 상호작용 가능 할 때 활성화시킬 오브젝트
+        [SerializeField] GameObject _deadObject; // Dead 오브젝트
 
         private void Start()
         {
@@ -36,6 +37,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
         private void Init()
         {
             _interactObject.SetActive(false);
+            _deadObject.SetActive(false);
         }
         private void AddEvent()
         {
@@ -63,6 +65,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
             if (!_interactActive)
             {
                 // 활성화
+                PopupActive(false);
                 FlowManager.AddSubPopup(PopupStyle.Interact);
                 StartCoroutine(InteractSettingRoutine());
                 Character.Instance.IsInteract = true;
@@ -71,6 +74,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
             else
             {
                 // 비활성화
+                PopupActive(true);
                 popup_Interact.Hide();
                 popup_Interact = null;
                 _interactActive = false;
@@ -85,9 +89,13 @@ namespace Assets.Scripts.UI.Popup.PopupView
             _interactActive = true;
         }
 
-        public void IntearctActive(bool ison)
+        public void PopupActive(bool ison)
         {
             _interactObject.SetActive(ison);
+        }
+        public void DeadActive(bool ison)
+        {
+            _deadObject.SetActive(ison);
         }
         private void HpValueChange()
         {
