@@ -11,23 +11,34 @@ public class BT_Goblin : EnemyBTBase
         enemy = this.GetComponent<Enemy>();
     }
 
+    // 고블린 공격 정의하기
+    /*
+     * 1. 그냥 휘두르는 공격
+     * Attack1
+     */
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.U))
         {
             DebugManager.ins.Log("AI동작 : 공격", DebugManager.TextColor.Yellow);
-            //StartCoroutine(movement.AI_Doing_Jump());
+            enemy.ChangeAttackNumber(0);
             enemy.Attack();
+
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
+            enemy.ChangeAttackNumber(1);
             DebugManager.ins.Log("AI동작 : 롤링", DebugManager.TextColor.Yellow);
-            StartCoroutine(movement.AI_Doing_Rolling());
+            //StartCoroutine(movement.AI_Doing_Rolling());
+            enemy.Attack();
+
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
             DebugManager.ins.Log("AI동작 : 점프공격", DebugManager.TextColor.Yellow);
-            StartCoroutine(movement.AI_Doing_JumpAttack());
+            //StartCoroutine(movement.AI_Doing_JumpAttack());
+            enemy.Attack();
+
         }
     }
     protected override IEnumerator AIRoutineBody() 

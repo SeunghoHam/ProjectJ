@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d37b5068fe0b554182bfa3faab99e8a, type: 3}
-  m_Name: Goblin
+  m_Name: Titan
   m_EditorClassIdentifier: 
-  _name: "\uACE0\uBE14\uB9B0"
+  _name: Titan
   _type: 1
   _hp: 2
   _damage: 1

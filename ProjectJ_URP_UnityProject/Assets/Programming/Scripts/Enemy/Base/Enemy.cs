@@ -1,10 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
-
 public class Enemy : UnitBase
 {
     // 캐릭터 및 데이터 정보 받아오기
@@ -14,25 +9,23 @@ public class Enemy : UnitBase
 
     public EnemyBTBase enemyBT;
 
-    /*
-    public enum EnemyType
-    {
-        Normal, // 공격 범위 1개(기본)
-        Boss, 
-    }
-    public EnemyType enemyType;*/
+    /// Attack함수에 모든 종류의 공격을 할당하기 위해서 공격을 따로 받음
+    protected int _attackNumber;
 
-    [SerializeField] private List<EnemyAttackRange> enemyAttackRange = new List<EnemyAttackRange>();
+    // 공격 범위 할당하기
+    // ㄴ보스같이 범위가 많다면 많이 할당되고, 잡몹이라면 한개만 들어감 
+    [SerializeField] protected List<EnemyAttackRange> enemyAttackRange = new List<EnemyAttackRange>();
 
-    [Space(20)]
+    [Space(10)]
+    [Header("보스 상황")]
+    [SerializeField] private int _hp;
+
+    [Space(10)]
     [Header("플레이어 시점 고정")]
     [SerializeField] private Transform _pinTarget; // 고정시킬 오브젝트(바라보는거)
     [SerializeField] private MeshRenderer _pinObject; // 고정되어있다면 활성화 시킬 오브젝트 (테스트용임)
 
 
-    [Space(10)]
-    [Header("보스 상황")]
-    [SerializeField] private int _hp;
 
 
     private bool _canHit = false;
@@ -77,33 +70,13 @@ public class Enemy : UnitBase
             enemyAttackRange[i].GetEnemy(this);
         }
     }
-    #region Battle
-    public override void Attack()
+    public void ChangeAttackNumber(int number)
     {
-        
-        if( _data._type == EnemyData.EnemyType.Boss)
-        {
-            // 어떤 공격인지 정해줘야함
-            int attack = 0;
-            switch (attack)
-            {
-                case 0:
-                    // 기본 평타
-                    RangeType(EnemyAttackRange.RangeType.Melee);
-                    break;
-                case 1:
-                    // 점프공격
-                    RangeType(EnemyAttackRange.RangeType.Jump);
-                    break;
-                default:
-                    RangeType(EnemyAttackRange.RangeType.Melee);
-                    break;
-            }
-        }
-        animator.Anim_Attack1();
-        base.Attack();
+        _attackNumber = number;
     }
-    private void RangeType(EnemyAttackRange.RangeType rangeType)
+
+    #region Battle
+    protected void RangeType(EnemyAttackRange.RangeType rangeType)
     {
         for (int i = 0; i < enemyAttackRange.Count; i++)
         {
@@ -114,6 +87,10 @@ public class Enemy : UnitBase
             else
                 enemyAttackRange[i].SetColliderEnable(false);
         }
+    }
+    public override void Attack()
+    {
+        base.Attack();
     }
     public override void Damaged(int damage)
     {
@@ -150,6 +127,5 @@ public class Enemy : UnitBase
     {
         get { return _pinTarget; }
     }
-
     #endregion
 }
