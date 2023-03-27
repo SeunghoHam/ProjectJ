@@ -5,13 +5,13 @@ using DG.Tweening;
 using Assets.Scripts.Manager;
 using UniRx.Triggers;
 using UniRx;
+using Unity.VisualScripting;
 
 public class EnemyMovement : MonoBehaviour
 {
     // 움직임 및 회전 관련
-
     private Transform model; // 회전될 오브젝트
-    [SerializeField] private Transform target; // 목적 대상 ( 스크립트에서 받아올 수 있게 해야함)
+    [SerializeField] private GameObject target; // 목적 대상 ( 스크립트에서 받아올 수 있게 해야함)
     private EnemyAnimator animator;
     private Rigidbody rigid;
     private bool isDoing = false; // 동작중
@@ -21,9 +21,7 @@ public class EnemyMovement : MonoBehaviour
     {
         model = this.transform.GetChild(0).transform;
         rigid = this.GetComponent<Rigidbody>();
-        //target = Character.Instance.gameObject.transform;
-
-        
+        //target = Character.Instance.gameObject;
     }
     public void Initialize(EnemyAnimator Anim) // Enemy 스크립트에서 필요한 정보들 가져오기
     {
@@ -38,7 +36,8 @@ public class EnemyMovement : MonoBehaviour
         if(!isDoing)
         {
             Vector3 targetAxis = new Vector3(target.transform.position.x, this.transform.position.y, transform.position.z);
-            model.LookAt(target, Vector3.up);
+            model.LookAt(target.transform, Vector3.up);
+            //model.transform.localRotation = Quaternion.Euler(0, model.transform.localRotation.y,0);
         }
     }
 
@@ -48,7 +47,7 @@ public class EnemyMovement : MonoBehaviour
 
         // 방향구하기
         // 방향 벡터값 = 목표 벡터값 - 시작벡터
-        Vector3 heading = (this.transform.position - target.position).normalized;
+        Vector3 heading = (this.transform.position - target.transform.position).normalized;
         Vector3 dir = this.transform.position +  heading * 1.2f;
         this.transform.DOMove(dir, 0.5f, false);
     }
@@ -60,8 +59,8 @@ public class EnemyMovement : MonoBehaviour
     public virtual void AI_Doing_JumpAfterMove()
     {
         // 점프 후 공격에서 사용
-        Vector3 heading = (this.transform.position - target.position).normalized; // 캐릭터 - 나(적) 이 되도록
-        Vector3 dir = target.position + heading;
+        Vector3 heading = (this.transform.position - target.transform.position).normalized; // 캐릭터 - 나(적) 이 되도록
+        Vector3 dir = target.transform.position + heading;
         this.transform.DOMove(dir, 0.8f).SetEase(Ease.InQuad);
 
         // 끝날때 이펙트 콰앙
@@ -71,8 +70,8 @@ public class EnemyMovement : MonoBehaviour
         float duration = 0.5f;
         
         model.DOLocalRotate(new Vector3(0, 360, 0), duration * 0.5f , RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(2, LoopType.Incremental);
-        Vector3 heading = (this.transform.position - target.position).normalized; // 캐릭터 - 나(적) 이 되도록
-        Vector3 dir = target.position + heading;
+        Vector3 heading = (this.transform.position - target.transform.position).normalized; // 캐릭터 - 나(적) 이 되도록
+        Vector3 dir = target.transform.position + heading;
         this.transform.DOMove(dir, duration, false).SetEase(Ease.InQuad);
     }
 }

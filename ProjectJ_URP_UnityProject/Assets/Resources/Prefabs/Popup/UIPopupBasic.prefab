@@ -490,7 +490,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 843d45f2411d65d4abe303300eacde0c, type: 3}
     m_FontSize: 50
     m_FontStyle: 1
     m_BestFit: 0
@@ -1228,6 +1228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popup_Interact: {fileID: 0}
+  popup_Pause: {fileID: 0}
   _hpValue: {fileID: 5440084608667641840}
   _mpValue: {fileID: 1755159662307056242}
   _interactObject: {fileID: 6597844141010676491}
@@ -1375,7 +1376,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 843d45f2411d65d4abe303300eacde0c, type: 3}
     m_FontSize: 30
     m_FontStyle: 1
     m_BestFit: 0

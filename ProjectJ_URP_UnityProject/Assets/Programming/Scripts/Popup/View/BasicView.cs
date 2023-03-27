@@ -21,12 +21,18 @@ namespace Assets.Scripts.UI.Popup.PopupView
         public PopupManager PopupManager { get; set; }
 
         public UIPopupInteract popup_Interact;
+        public UIPopupPause popup_Pause;
 
         [SerializeField] Image _hpValue;
         [SerializeField] Image _mpValue;
 
         [SerializeField] GameObject _interactObject; // 상호작용 가능 할 때 활성화시킬 오브젝트
         [SerializeField] GameObject _deadObject; // Dead 오브젝트
+
+
+        // 팝업 활성화여부
+        private bool _interactActive = false;
+        private bool _pauseActive = false;
 
         private void Start()
         {
@@ -48,13 +54,18 @@ namespace Assets.Scripts.UI.Popup.PopupView
 
             this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ =>
             {
-                Interact();
+                Input_Interact();
             }).AddTo(gameObject);
+
+            this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.P)).Subscribe(_ =>
+            {
+                Input_Pause();
+            }).AddTo(gameObject);
+
             var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPotion()); // 물약
         }
 
-        private bool _interactActive = false;
-        private void Interact()
+        private void Input_Interact()
         {
             // 캐릭터가 축복 범위에 있단 것을 반환
             if (!Character.Instance.CanInteract ||
@@ -82,11 +93,31 @@ namespace Assets.Scripts.UI.Popup.PopupView
                 BattleManager.Instance.CusrorVisible(false);
             }
         }
+
         private IEnumerator InteractSettingRoutine()
         {
             yield return new WaitUntil(() => PopupManager.PopupList.Count > 1); // 1 : basic , 2 : 추가되는 팝업
             popup_Interact = PopupManager.PopupList[1].GetComponent<UIPopupInteract>();
             _interactActive = true;
+        }
+
+
+        private void Input_Pause()
+        {
+            if(!_pauseActive)
+            {
+                FlowManager.Change(PopupStyle.Pause);
+                Character.Instance.IsInteract = true;
+                _pauseActive = true;
+                BattleManager.Instance.CusrorVisible(true);
+            }
+            else
+            {
+                FlowManager.Change(PopupStyle.Basic);
+                Character.Instance.IsInteract = false;
+                _pauseActive = false;
+                BattleManager.Instance.CusrorVisible(false);
+            }
         }
 
         public void PopupActive(bool ison)
