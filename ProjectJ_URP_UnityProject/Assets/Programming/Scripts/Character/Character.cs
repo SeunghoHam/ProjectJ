@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Character : UnitBase
 {
-    // PinTarget
     public PinTargetRange pinTargetRange;
     public CharacterMovement Movement;
     public CharacterAnimator Animator;
@@ -89,11 +88,6 @@ public class Character : UnitBase
     {
         Instance = this;
         _curHP = _maxHP;
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Y))
-            Damaged(1);
     }
     public override void Attack()
     {

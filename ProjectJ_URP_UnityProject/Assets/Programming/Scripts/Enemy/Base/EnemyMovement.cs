@@ -13,7 +13,6 @@ public class EnemyMovement : MonoBehaviour
     private Transform model; // 회전될 오브젝트
     [SerializeField] private Transform target; // 목적 대상 ( 스크립트에서 받아올 수 있게 해야함)
     private EnemyAnimator animator;
-
     private Rigidbody rigid;
     private bool isDoing = false; // 동작중
     private float _jumpForce = 6f;
@@ -53,26 +52,21 @@ public class EnemyMovement : MonoBehaviour
         Vector3 dir = this.transform.position +  heading * 1.2f;
         this.transform.DOMove(dir, 0.5f, false);
     }
-    public IEnumerator AI_Doing_JumpAttack()
+    public virtual void  AI_Doing_Jump()
     {
-        //animator.Anim_Jump(); // 점프 모션이 되게 이상함
         rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-        //MoveAttack();
+    }
 
-        //yield return new WaitForSeconds(0.3f);
+    public virtual void AI_Doing_JumpAfterMove()
+    {
+        // 점프 후 공격에서 사용
         Vector3 heading = (this.transform.position - target.position).normalized; // 캐릭터 - 나(적) 이 되도록
         Vector3 dir = target.position + heading;
-        this.transform.DOMove(dir, 0.5f, false);
-        animator.Anim_Attack1();
-        yield return new WaitForSeconds(1f);
+        this.transform.DOMove(dir, 0.8f).SetEase(Ease.InQuad);
+
+        // 끝날때 이펙트 콰앙
     }
-    public IEnumerator AI_Doing_Jump()
-    {
-        //animator.Anim_Jump();
-        rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-        yield return new WaitForSeconds(1f);
-    }
-    public IEnumerator AI_Doing_Rolling()
+    public virtual void  AI_Doing_Rolling()
     {
         float duration = 0.5f;
         
@@ -80,6 +74,5 @@ public class EnemyMovement : MonoBehaviour
         Vector3 heading = (this.transform.position - target.position).normalized; // 캐릭터 - 나(적) 이 되도록
         Vector3 dir = target.position + heading;
         this.transform.DOMove(dir, duration, false).SetEase(Ease.InQuad);
-        yield return new WaitForSeconds(duration);
     }
 }

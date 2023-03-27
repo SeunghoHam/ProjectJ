@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterAttackManager : RangeSystem
+public class CharacterAttackRange : RangeSystem
 {
     protected override void OnTriggerEnter(Collider other)
     {

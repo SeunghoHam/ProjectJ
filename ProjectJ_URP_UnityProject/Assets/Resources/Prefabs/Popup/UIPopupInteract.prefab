@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 386702901832576651}
   - component: {fileID: 8466062048402205406}
   m_Layer: 5
-  m_Name: Button (Legacy)
+  m_Name: '[Button] Rest'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,3 +519,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DontDestory: 0
+  _restButton: {fileID: 8466062048402205406}

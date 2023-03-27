@@ -26,6 +26,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
         [SerializeField] Image _mpValue;
 
         [SerializeField] GameObject _interactObject; // 상호작용 가능 할 때 활성화시킬 오브젝트
+        [SerializeField] GameObject _deadObject; // Dead 오브젝트
 
         private void Start()
         {
@@ -36,6 +37,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
         private void Init()
         {
             _interactObject.SetActive(false);
+            _deadObject.SetActive(false);
         }
         private void AddEvent()
         {
@@ -47,9 +49,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
             this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ =>
             {
                 Interact();
-            }
-            ).AddTo(gameObject);
-
+            }).AddTo(gameObject);
             var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPotion()); // 물약
         }
 
@@ -57,12 +57,15 @@ namespace Assets.Scripts.UI.Popup.PopupView
         private void Interact()
         {
             // 캐릭터가 축복 범위에 있단 것을 반환
-            if (!Character.Instance.CanInteract)
+            if (!Character.Instance.CanInteract ||
+                Character.Instance.Animator.AnimState != CharacterAnimator.ChaAnimState.Idle)
                 return;
 
+            // 앉기 모션 후에 창 활성화 되도록 해야함
             if (!_interactActive)
             {
                 // 활성화
+                PopupActive(false);
                 FlowManager.AddSubPopup(PopupStyle.Interact);
                 StartCoroutine(InteractSettingRoutine());
                 Character.Instance.IsInteract = true;
@@ -71,6 +74,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
             else
             {
                 // 비활성화
+                PopupActive(true);
                 popup_Interact.Hide();
                 popup_Interact = null;
                 _interactActive = false;
@@ -85,9 +89,13 @@ namespace Assets.Scripts.UI.Popup.PopupView
             _interactActive = true;
         }
 
-        public void IntearctActive(bool ison)
+        public void PopupActive(bool ison)
         {
             _interactObject.SetActive(ison);
+        }
+        public void DeadActive(bool ison)
+        {
+            _deadObject.SetActive(ison);
         }
         private void HpValueChange()
         {

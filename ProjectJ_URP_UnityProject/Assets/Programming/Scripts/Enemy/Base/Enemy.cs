@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
 public class Enemy : UnitBase
 {
     // 캐릭터 및 데이터 정보 받아오기
@@ -10,19 +7,37 @@ public class Enemy : UnitBase
     public EnemyAnimator animator;
     public EnemyMovement movement;
 
-    [HideInInspector] 
     public EnemyBTBase enemyBT;
 
+    /// Attack함수에 모든 종류의 공격을 할당하기 위해서 공격을 따로 받음
+    protected int _attackNumber;
 
-    [Space(20)]
-    [Header("플레이어 시점 고정")]
-    [SerializeField] private Transform _pinTarget; // 고정시킬 오브젝트(바라보는거)
-    [SerializeField] private MeshRenderer _pinObject; // 고정되어있다면 활성화 시킬 오브젝트
-
+    // 공격 범위 할당하기
+    // ㄴ보스같이 범위가 많다면 많이 할당되고, 잡몹이라면 한개만 들어감 
+    [SerializeField] protected List<EnemyAttackRange> enemyAttackRange = new List<EnemyAttackRange>();
 
     [Space(10)]
     [Header("보스 상황")]
     [SerializeField] private int _hp;
+
+    [Space(10)]
+    [Header("플레이어 시점 고정")]
+    [SerializeField] private Transform _pinTarget; // 고정시킬 오브젝트(바라보는거)
+    [SerializeField] private MeshRenderer _pinObject; // 고정되어있다면 활성화 시킬 오브젝트 (테스트용임)
+
+
+
+
+    private bool _canHit = false;
+    public bool CanHit
+    {
+        get { return _canHit; }
+        set 
+        {
+            if (_canHit != value)
+                _canHit = value;
+        }
+    }
 
     private bool _canAvoid = false;
     public bool CanAvoid
@@ -34,30 +49,47 @@ public class Enemy : UnitBase
                 _canAvoid = value;
         }
     }
+
     private void Awake()
     {
         EnemyInitilaize();
-        BattleStart();
     }
+
+    /// <summary> EnemyData 에서 가져온 정보로 할당하기 </summary>
     private void EnemyInitilaize()
     {
         movement.Initialize(animator);
+        animator.GetEnemy(this);
         _pinObject.enabled = false;
         _hp = _data._hp;
         enemyBT = this.GetComponent<EnemyBTBase>();
-    }
 
-    public void BattleStart()
+        // RangeSetting
+        for (int i = 0; i < enemyAttackRange.Count; i++)
+        {
+            enemyAttackRange[i].GetEnemy(this);
+        }
+    }
+    public void ChangeAttackNumber(int number)
     {
-        //Debug.Log("전투 시작");
-
-        // AI 활성화
-        //enemyBT.BT_Setting();
+        _attackNumber = number;
     }
+
     #region Battle
+    protected void RangeType(EnemyAttackRange.RangeType rangeType)
+    {
+        for (int i = 0; i < enemyAttackRange.Count; i++)
+        {
+            if (enemyAttackRange[i].rangeType == rangeType)
+            {
+                enemyAttackRange[i].SetColliderEnable(true);
+            }
+            else
+                enemyAttackRange[i].SetColliderEnable(false);
+        }
+    }
     public override void Attack()
     {
-        animator.Anim_Attack1();
         base.Attack();
     }
     public override void Damaged(int damage)
@@ -95,6 +127,5 @@ public class Enemy : UnitBase
     {
         get { return _pinTarget; }
     }
-
     #endregion
 }
