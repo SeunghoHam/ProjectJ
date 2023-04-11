@@ -7,17 +7,16 @@ namespace Assets.Scripts.Manager
 {
     public class BattleManager : UnitySingleton<BattleManager>
     {
-        // 리스트도 여기서 관리해야할까?
-        // ex) 캐릭터 공격가능 및 고정 가능 리스트
+        // ex) CharacterAttack with AttackRange
         private static List<Enemy> _enemyList_pin = new List<Enemy>();
         private static List<Enemy> _enemyList_attack = new List<Enemy>();
 
         private static List<Enemy> _activeEnemyList = new List<Enemy>();
 
-        private static GameObject _player; // 캐릭터가 범위내에 있다면 공격함
+        private static GameObject _player; // if Chararacer inRange
 
-        // 회피같은 시스템을 위해서 캐릭터랑 전투중인 적들 가져오기
-        private EnemyMovement enemyMovemnet;
+        // attacking enemy ( 전투중인 적 가져오기 )
+        //private EnemyMovement enemyMovemnet;
 
         #region ::: Attack :::
         public static List<Enemy> GetEnemy()
@@ -77,7 +76,7 @@ namespace Assets.Scripts.Manager
         {
             for (int i = 0; i < GetEnemy().Count; i++)
             {
-                if (GetEnemy()[i].CanAvoid) // 회피 가능 상태
+                if (GetEnemy()[i].CanAvoid) // Can Avoid
                 {
                     GetEnemy()[i].Avoid();
                 }
@@ -89,7 +88,7 @@ namespace Assets.Scripts.Manager
         }
 
         /// <summary>
-        /// 플레이어 피격
+        /// PlayerDamaged
         /// </summary>
         public static void Damaged()
         {

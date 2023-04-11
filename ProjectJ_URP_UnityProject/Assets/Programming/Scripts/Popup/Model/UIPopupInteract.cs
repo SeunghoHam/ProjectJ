@@ -26,6 +26,7 @@ namespace Assets.Scripts.UI.Popup.Base
             _basicView.FlowManager = _flowManager;
             _basicView.ResourcesManager = _resourcesManager;
         }
+        
         public override void UnInitialize()
         {
             base.UnInitialize();

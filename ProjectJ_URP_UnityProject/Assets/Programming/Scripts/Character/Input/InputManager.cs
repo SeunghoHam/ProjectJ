@@ -4,12 +4,16 @@ using UnityEngine;
 using UniRx;
 using System.Collections;
 using Assets.Scripts.Manager;
+using Assets.Scripts.UI;
+using Assets.Scripts.UI.Popup.Base;
 
 public class InputManager : MonoBehaviour
 {
     private CharacterMovement Movement;
     private CharacterAnimator Animator;
+
     private WeaponController weaponController;
+
     // Input
     private float _refChargeTime = 0.7f;
     private float _curChargeTime;
@@ -18,6 +22,9 @@ public class InputManager : MonoBehaviour
     private bool _isReady; // 우클릭시 준비상태
 
     private bool _isContinuous; // 연속공격을 하면 되는지
+
+    private UIPopupBasic popup_Basic; // BasicView에서 동작시킬것들 가져옴
+
     private void Start()
     {
         Animator = Character.Instance.Animator;
@@ -26,25 +33,33 @@ public class InputManager : MonoBehaviour
 
         InputSetting();
     }
+
     private void InputSetting()
     {
-        var mouseLeftDownStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonDown(0));
+        var mouseLeftDownStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonDown(0))
+            .Subscribe(_ => Attack());
         var mouseLeftUpStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonUp(0));
 
         var mouseRightDownStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonDown(1));
         var mouseRightUpStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonUp(1));
 
-        var targetPinStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Q)).Subscribe(_ => PinTarget());
+        var targetPinStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Q))
+            .Subscribe(_ => PinTarget());
         var jumpStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.F)).Subscribe(_ => Jump());
         var rollStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Space)).Subscribe(_ => Roll());
         var runStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.LeftShift)).Subscribe(_ => Run());
-        var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift)).Subscribe(_ => RunCancel());
+        var runCancelStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyUp(KeyCode.LeftShift))
+            .Subscribe(_ => RunCancel());
 
         // 물약 회복 -> BasicView로 이동
         // Interact활성화 -> BasicView로 이동
-        //var changeMdoeStrema = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => ChangeWeaponState());
+        var potionStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R))
+            .Subscribe(_ => GetPotion());
+        var interactStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E))
+            .Subscribe(_ => Interact());
+        var pauseStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.P)).Subscribe(_ => Pause());
 
-        // 롱클릭
+        /* [About] LongClick
         mouseLeftDownStream
             // 마우스 클릭되면 2초후 OnNext 실행
             .SelectMany(_ => Observable.Timer(TimeSpan.FromSeconds(_refChargeTime))) // _chargeTime만큼 모아서 때리면 강공격
@@ -69,7 +84,7 @@ public class InputManager : MonoBehaviour
         mouseRightDownStream
             .Subscribe(_ => Ready());
         mouseRightUpStream
-            .Subscribe(_ => ReadyCancel());
+            .Subscribe(_ => ReadyCancel());*/
     }
 
 
@@ -78,69 +93,55 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Attack()
     {
-        Attack_Normal();
-        /*
-        if (_isReady) // 우클릭 후 공격
-        {
-            Attack_Ready();
-            return;
-        }
-
-        if (_isCharge) // 차지 공격
-        {
-            Attack_Charge();
-            return;
-        }
-        else
-        {
-            Attack_Normal(); // 그냥 공격 - 연속공격 생기면 적용
-            return;
-        }*/
-    }
-
-    public void Attack_Normal()
-    {
         if (Character.Instance.IsInteract)
             return;
 
         if (!Animator.CanAttack || Animator.AnimState == CharacterAnimator.ChaAnimState.Roll)
         {
-            //Debug.Log("공격 반환당함");
             return;
         }
+        
         Animator.CanAttack = false;
-        //if (Animator.AnimState != CharacterAnimator.ChaAnimState.SeriesAttackReady) // 연속공격 중이 아님 ( 1타 ) 
-        if(Animator.AttackCount == 0)
+        switch (Animator.AttackCount) // AttackCount
         {
-            //Debug.Log("공격_1타");
-            Animator.AnimState = CharacterAnimator.ChaAnimState.Attack;
-            Animator.Anim_Sword_Slash1();
-            
-            //Animator.IsAttacking = true;
-            //_isContinuous = true;
+            case 0:
+                Attack_First();
+                break;
+            case 1:
+                Attack_Second();
+                break;
+            default:
+                break;
         }
-        else if(Animator.AttackCount == 1) // 연속공격 적용
-        {
-            //Animator.IsAttacking = true;
-            //Debug.Log("공격_2타");
-            Animator.Anim_Sword_Slash2();
-        }
-
-
     }
+
+    private void Attack_First()
+    {
+        Animator.AnimState = CharacterAnimator.ChaAnimState.Attack;
+        Animator.Anim_Sword_Slash1();
+    }
+
+    private void Attack_Second()
+    {
+        Animator.Anim_Sword_Slash2();
+    }
+
     public void Attack_Charge()
     {
         //DebugManager.ins.Log("차지 공격 " + _curChargeTime + "초 차징함", DebugManager.TextColor.Yellow);
     }
+
     public void Attack_Ready()
     {
         //DebugManager.ins.Log("우클릭 후 공격", DebugManager.TextColor.Yellow);
     }
+
     public void Ready() // 우클릭 동작
     {
         //DebugManager.ins.Log("준비 자세", DebugManager.TextColor.Red);
         _isReady = true;
     }
+
     public void ReadyCancel()
     {
         //DebugManager.ins.Log("준비 취소", DebugManager.TextColor.Red);
@@ -152,11 +153,47 @@ public class InputManager : MonoBehaviour
         //DebugManager.ins.Log("Run", DebugManager.TextColor.Red);
         //Animator.WalkValue = 1.0f;
     }
+
     public void RunCancel()
     {
         //DebugManager.ins.Log("Run Cancel", DebugManager.TextColor.Red);
         //Animator.WalkValue = 0.0f;
     }
+
+    public void Interact() // 상호작용
+    {
+        if (popup_Basic == null)
+            popup_Basic = PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>();
+
+        popup_Basic._basicView.Input_Interact();
+
+        /*
+        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)
+        {
+        }*/
+    }
+
+    public void Pause() // BasicView -> Pause
+    {
+        if (popup_Basic == null)
+            popup_Basic = PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>();
+
+        popup_Basic._basicView.Input_Pause();
+    }
+
+    public void GetPotion() // 물약 먹기
+    {
+        if (popup_Basic == null)
+            popup_Basic = PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>();
+
+        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)
+        {
+            Animator.AnimState = CharacterAnimator.ChaAnimState.Drinking;
+            Animator.Anim_Drinking();
+            popup_Basic._basicView.GetPotion();
+        }
+    }
+
     public void Jump()
     {
         if (Character.Instance.IsInteract)
@@ -170,18 +207,20 @@ public class InputManager : MonoBehaviour
             // 점프를 합니당~
         }
     }
+
     public void Roll()
     {
         if (Character.Instance.IsInteract)
             return;
 
-        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle)//) &&!Animator.IsRolling)
+        if (Animator.AnimState == CharacterAnimator.ChaAnimState.Idle) //) &&!Animator.IsRolling)
         {
             Animator.AnimState = CharacterAnimator.ChaAnimState.Roll;
             Animator.Anim_Roll();
             Movement.RollMove();
         }
     }
+
     public void PinTarget()
     {
         if (Character.Instance.IsInteract)

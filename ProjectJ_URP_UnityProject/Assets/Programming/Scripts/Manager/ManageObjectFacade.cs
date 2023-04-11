@@ -19,7 +19,12 @@ namespace Assets.Scripts.MangeObject
 
         public static BattleManager BattleManager
         { get { return BattleManager.Instance; } }
-
+        
+        public static  DataManager DataManager
+        {
+            get { return DataManager.Instance; }
+        }
+        
         public static void Initialize()
         {
             if (_isInitialize)
@@ -29,6 +34,7 @@ namespace Assets.Scripts.MangeObject
             FlowManager.Initialize();
             PopupManager.Initialize();
             BattleManager.Initialize();
+            DataManager.Initialize();
         }
 
         public static IObservable<Unit> UnInitialize()
@@ -47,6 +53,8 @@ namespace Assets.Scripts.MangeObject
             {
                 PopupManager.UnInitialize();
                 FlowManager.UnInitialize();
+                DataManager.UnInitialize();
+                
                 yield return FrameCountType.FixedUpdate.GetYieldInstruction();
                 _isInitialize = false;
                 observer.OnNext(Unit.Default);

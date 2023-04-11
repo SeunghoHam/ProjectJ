@@ -15,6 +15,16 @@ public class Character : UnitBase
     private int _maxHP = 10;
     private int _curHP;
 
+    
+    #region  ::: CharacterData :::
+
+    public string userName;
+    public float exp;
+    public int[] status;
+
+    #endregion
+    
+    // Can Interact?
     #region ::: Interact :::
 
     private bool _canInteract = false;
