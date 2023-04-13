@@ -7,8 +7,13 @@ public class CameraSystem : MonoBehaviour
     [SerializeField] private CinemachineBrain _brain;
 
     [Space(5)]
+    [Header("VirtualCamera")]
     [SerializeField] private CinemachineVirtualCamera _cam3rdSight;
-
+    [SerializeField] private CinemachineVirtualCamera _cam3rdSight2;
+    
+    
+    [Space(5)]
+    [Header("offset")]
     private Cinemachine3rdPersonFollow _cameraComponent;
     public Vector3 _shoulderOffset;
     private Vector3 _damping;
@@ -36,8 +41,7 @@ public class CameraSystem : MonoBehaviour
         _cam3rdSight.Follow = Character.Instance.TargetPoint;
         _cam3rdSight.LookAt = Character.Instance.TargetPoint;
     }
-
-
+    
     // ShouldOffset 정의시키기
     public void ChangeOffset(Vector3 offsetValue)
     {

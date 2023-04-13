@@ -11,6 +11,11 @@ public class TestScene : MonoBehaviour
     private void Start()
     {
         Init();
+        
+        Application.targetFrameRate = 60;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow, 0);
     }
     private void Init()
     {

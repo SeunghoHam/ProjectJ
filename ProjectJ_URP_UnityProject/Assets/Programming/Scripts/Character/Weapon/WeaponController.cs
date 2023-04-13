@@ -18,10 +18,8 @@ public class WeaponController : MonoBehaviour
 
     public void TimerStart()
     {
-        var mouseUpStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonDown(0)); // 마우스 클릭이 있으면 Hdie 취소 후 다시 생성되도록
-
-        
-        Observable.Timer(TimeSpan.FromSeconds(1))
+        //var mouseUpStream = this.UpdateAsObservable().Where(_ => Input.GetMouseButtonDown(0)); // 마우스 클릭이 있으면 Hdie 취소 후 다시 생성되도록
+        Observable.Timer(TimeSpan.FromSeconds(1.5f))
             .Take(1)
             //.Repeat()
             //.RepeatUntilDestroy(gameObject)

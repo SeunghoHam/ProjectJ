@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Assets.Scripts.UI.Popup.Base
 {
     public class UIPopupPause : PopupBase
@@ -26,14 +25,21 @@ namespace Assets.Scripts.UI.Popup.Base
             _pauseView.FlowManager = _flowManager;
             _pauseView.ResourcesManager = _resourcesManager;
         }
-
+        public override void UnInitialize()
+        {
+            base.UnInitialize();
+        }
         public override void Show(params object[] data)
         {
             base.Show(data);
         }
         public override void Hide()
         {
-            base.Hide();
+            //Character.Instance.IsInteract = false;
+            //BattleManager.Instance.CusrorVisible(false);
+            PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView
+                .Input_Pause();
+            //base.Hide();
         }
     }
 }

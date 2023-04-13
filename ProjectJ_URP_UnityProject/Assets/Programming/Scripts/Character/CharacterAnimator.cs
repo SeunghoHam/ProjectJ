@@ -1,4 +1,6 @@
 using Assets.Scripts.Manager;
+using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
@@ -40,8 +42,7 @@ public class CharacterAnimator : MonoBehaviour
         Jump, // 점프,
         Roll, //  구르기
         Attack, // 공격중
-        Heal, // 회복모션중
-
+        Drinking, // 회복모션중
         //SeriesAttackReady, // 연속공격 준비
     }
     
@@ -146,29 +147,25 @@ public class CharacterAnimator : MonoBehaviour
     }
     public void Anim_DamagePoint() // 데미지를 넣는 순간
     {
-        
+        // Active Enemy is Enable
         if (BattleManager.GetEnemy().Count > 0)
         {
             BattleManager.Attack();
-            //Character.Instance.Attack();
         }
         Anim_SeriesAttack_Active();
     }
-    public void Anim_SeriesAttack_Active() // 연속공격 활성화
+    private void Anim_SeriesAttack_Active() // 연속공격 활성화
     {
-        if(AnimState != ChaAnimState.Attack)
+        if(_attackCount == 0) // 공격 개수 
         {
-            Debug.Log("다시 공격가능");
             CanAttack = true; // 다시 공격 가능하게 해줘야함
         }
         else // 두번째 타격에서는 공격이 다시 활성화되면 안되니까
         { return; }
         
     }
-    public void Anim_SeriesAttack_DeActive() // 연속공격 비활성화 ( EndSlash 에서 이역할을 해도 되지 않을까?)
-    {
+    #endregion
 
-    }
 
     public void Anim_Sword_Death1()
     {
@@ -178,13 +175,30 @@ public class CharacterAnimator : MonoBehaviour
     {
         _animator.SetTrigger("Death2");
     }
-    public void Anim_Sword_()
+
+    #region ::: Sitting :::
+    public void Anim_Sitting()
     {
-        
+        _animator.SetTrigger("Sitting");
     }
+    public void SittingEnd()
+    {
+
+    }
+
+    public void Anim_Drinking()
+    {
+        _animator.SetTrigger("Drinking");
+    }
+    public void DrinkingEnd()
+    {
+        // 이 내부의 함수에 넣은 것들은 회복 중에 피격되엇을 경우에도 호출되어야함
+        AnimState = ChaAnimState.Idle;
+    }
+
     #endregion
 
-    
+
     public void End_Anim_Jump() // 완전한 애니메이션 종료를 의미
     {
         AnimState = ChaAnimState.Idle;
@@ -196,7 +210,6 @@ public class CharacterAnimator : MonoBehaviour
 
     public void End_Anim_Slash()
     {
-        //IsAttacking = false;
         _attackCount = 0;
         AnimState = ChaAnimState.Idle;
         CanAttack = true;

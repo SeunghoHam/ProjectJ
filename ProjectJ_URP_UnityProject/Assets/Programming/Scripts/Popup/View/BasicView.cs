@@ -51,28 +51,18 @@ namespace Assets.Scripts.UI.Popup.PopupView
                 //.Where(_ => )
                 .Subscribe(_ => HpValueChange())
                 .AddTo(gameObject);
-
-            this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E)).Subscribe(_ =>
-            {
-                Input_Interact();
-            }).AddTo(gameObject);
-
-            this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.P)).Subscribe(_ =>
-            {
-                Input_Pause();
-            }).AddTo(gameObject);
-
-            var drinkStream = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.R)).Subscribe(_ => GetPotion()); // 물약
+            
         }
 
-        private void Input_Interact()
+
+        public void Input_Interact()
         {
             // 캐릭터가 축복 범위에 있단 것을 반환
             if (!Character.Instance.CanInteract ||
                 Character.Instance.Animator.AnimState != CharacterAnimator.ChaAnimState.Idle)
                 return;
-
-            // 앉기 모션 후에 창 활성화 되도록 해야함
+            
+            // :After SeatMotion (앉는 모션 뒤에 실행되도록)
             if (!_interactActive)
             {
                 // 활성화
@@ -94,6 +84,27 @@ namespace Assets.Scripts.UI.Popup.PopupView
             }
         }
 
+        public void Input_Pause()
+        {
+            if(!_pauseActive)
+            {
+                Debug.Log("Pause 활성화");
+                PopupActive(false);
+                FlowManager.AddSubPopup(PopupStyle.Pause);
+                StartCoroutine(PauseSettingRoutine());
+                Character.Instance.IsInteract = true;
+                BattleManager.Instance.CusrorVisible(true);
+            }
+            else
+            {
+                Debug.Log("Pause 종료하기");
+                //popup_Pause.Hide();
+                popup_Pause = null;
+                _pauseActive = false;
+                Character.Instance.IsInteract = false;
+                BattleManager.Instance.CusrorVisible(false);
+            }
+        }
         private IEnumerator InteractSettingRoutine()
         {
             yield return new WaitUntil(() => PopupManager.PopupList.Count > 1); // 1 : basic , 2 : 추가되는 팝업
@@ -101,25 +112,20 @@ namespace Assets.Scripts.UI.Popup.PopupView
             _interactActive = true;
         }
 
-
-        private void Input_Pause()
+        private IEnumerator PauseSettingRoutine()
         {
-            if(!_pauseActive)
-            {
-                FlowManager.Change(PopupStyle.Pause);
-                Character.Instance.IsInteract = true;
-                _pauseActive = true;
-                BattleManager.Instance.CusrorVisible(true);
-            }
-            else
-            {
-                FlowManager.Change(PopupStyle.Basic);
-                Character.Instance.IsInteract = false;
-                _pauseActive = false;
-                BattleManager.Instance.CusrorVisible(false);
-            }
+            yield return new WaitUntil(() => PopupManager.PopupList.Count > 1); // 1 : basic , 2 : 추가되는 팝업
+            popup_Pause = PopupManager.PopupList[1].GetComponent<UIPopupPause>();
+            _pauseActive = true;
         }
 
+        
+
+        
+        /// <summary>
+        /// InteractObject Enable ( ex) Press "E" )
+        /// </summary>
+        /// <param name="ison"></param>
         public void PopupActive(bool ison)
         {
             _interactObject.SetActive(ison);
@@ -134,9 +140,10 @@ namespace Assets.Scripts.UI.Popup.PopupView
             //_hpValue.fillAmount = (float)Character.Instance.CurHP / (float)Character.Instance.MaxHP; // 최대값이 1
             _hpValue.DOFillAmount((float)Character.Instance.CurHP / (float)Character.Instance.MaxHP, 0.2f);
         }
-        private void GetPotion()
+        public void GetPotion()
         {
             DebugManager.ins.Log("물약 먹음", DebugManager.TextColor.Blue);
+            Character.Instance.Animator.Anim_Drinking();
         }
 
     }
