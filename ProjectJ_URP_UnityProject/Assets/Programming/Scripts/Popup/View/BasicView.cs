@@ -30,6 +30,16 @@ namespace Assets.Scripts.UI.Popup.PopupView
         [SerializeField] GameObject _deadObject; // Dead 오브젝트
 
 
+
+        public enum CurrentViewType
+        {
+            None,
+            Status,
+            System,
+        }
+
+        public CurrentViewType _currentViewType;
+        
         // 팝업 활성화여부
         private bool _interactActive = false;
         private bool _pauseActive = false;
@@ -44,6 +54,8 @@ namespace Assets.Scripts.UI.Popup.PopupView
         {
             _interactObject.SetActive(false);
             _deadObject.SetActive(false);
+            
+               _pauseReactive = new ReactiveProperty<bool>(false);
         }
         private void AddEvent()
         {
@@ -84,27 +96,37 @@ namespace Assets.Scripts.UI.Popup.PopupView
             }
         }
 
+
+        private ReactiveProperty<bool> _pauseReactive;  // 한번만 실행되게 만들기
+        // 재입력 되었을때도 사라지게 해야함
         public void Input_Pause()
         {
-            if(!_pauseActive)
+            if (_currentViewType == CurrentViewType.None)
             {
-                Debug.Log("Pause 활성화");
-                PopupActive(false);
+                DebugManager.ins.Log("_currentViewTyep = " + _currentViewType.ToString());
+                PopupActive(false); // E 키 누르라는 유도오브젝트 활성여부
                 FlowManager.AddSubPopup(PopupStyle.Pause);
                 StartCoroutine(PauseSettingRoutine());
                 Character.Instance.IsInteract = true;
                 BattleManager.Instance.CusrorVisible(true);
+                _currentViewType = CurrentViewType.Status;
             }
             else
             {
-                Debug.Log("Pause 종료하기");
-                //popup_Pause.Hide();
-                popup_Pause = null;
-                _pauseActive = false;
-                Character.Instance.IsInteract = false;
+                DebugManager.ins.Log("_currentViewType = " + _currentViewType.ToString());
+                if (popup_Pause != null)
+                    popup_Pause.Hide();
+                if (popup_Interact != null)
+                    popup_Interact.Hide();
+
+                //yield return new WaitUntil(() => PopupManager.PopupList.Count == 1);
                 BattleManager.Instance.CusrorVisible(false);
+                Character.Instance.IsInteract = false;
+                _currentViewType = CurrentViewType.None;
             }
+
         }
+
         private IEnumerator InteractSettingRoutine()
         {
             yield return new WaitUntil(() => PopupManager.PopupList.Count > 1); // 1 : basic , 2 : 추가되는 팝업

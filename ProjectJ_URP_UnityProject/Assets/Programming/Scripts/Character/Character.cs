@@ -14,12 +14,11 @@ public class Character : UnitBase
     
     private int _maxHP = 10;
     private int _curHP;
-
     
     #region  ::: CharacterData :::
 
-    public string userName;
-    public float exp;
+    public string userName = "YatChoo";
+    public float exp = 1000;
     public int[] status;
 
     #endregion

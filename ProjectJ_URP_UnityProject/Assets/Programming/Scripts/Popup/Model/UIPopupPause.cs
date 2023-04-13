@@ -17,7 +17,7 @@ namespace Assets.Scripts.UI.Popup.Base
 
         [SerializeField] private PauseView _pauseView;
 
-        public override void Initialize()
+        public override void Initialize()   
         {
             base.Initialize();
             DependuncyInjection.Inject(this);
@@ -25,6 +25,13 @@ namespace Assets.Scripts.UI.Popup.Base
             _pauseView.FlowManager = _flowManager;
             _pauseView.ResourcesManager = _resourcesManager;
         }
+        public override void Hide()
+        {
+            base.Hide();
+            //if(PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.popup_Pause != null)
+                //PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.Input_Pause();
+        }
+        
         public override void UnInitialize()
         {
             base.UnInitialize();
@@ -33,13 +40,6 @@ namespace Assets.Scripts.UI.Popup.Base
         {
             base.Show(data);
         }
-        public override void Hide()
-        {
-            //Character.Instance.IsInteract = false;
-            //BattleManager.Instance.CusrorVisible(false);
-            PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView
-                .Input_Pause();
-            //base.Hide();
-        }
+        
     }
 }

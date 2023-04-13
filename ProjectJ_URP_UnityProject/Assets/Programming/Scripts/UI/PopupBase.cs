@@ -67,6 +67,7 @@ namespace Assets.Scripts.UI
                 gameObject.SetActive(false);
             if (DontDestory)
                 return;
+            
             Destroy();
         }
         public void SetParent(Transform parent)
