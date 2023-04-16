@@ -15,6 +15,8 @@ namespace Assets.Scripts.UI.Popup.Base
         [DependuncyInjection(typeof(ResourcesManager))]
         private ResourcesManager _resourcesManager;
 
+        [DependuncyInjection(typeof(DataManager))]
+        private DataManager _dataManager;
         [SerializeField] private PauseView _pauseView;
 
         public override void Initialize()   
@@ -24,6 +26,7 @@ namespace Assets.Scripts.UI.Popup.Base
 
             _pauseView.FlowManager = _flowManager;
             _pauseView.ResourcesManager = _resourcesManager;
+            _pauseView.DataManager = _dataManager;
         }
         public override void Hide()
         {

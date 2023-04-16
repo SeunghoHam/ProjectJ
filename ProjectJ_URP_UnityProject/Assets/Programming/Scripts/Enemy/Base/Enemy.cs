@@ -13,7 +13,7 @@ public class Enemy : UnitBase
     protected int _attackNumber;
 
     // 공격 범위 할당하기
-    // ㄴ보스같이 범위가 많다면 많이 할당되고, 잡몹이라면 한개만 들어감 
+    // ::보스같이 범위가 많다면 많이 할당되고, 잡몹이라면 한개만 들어감 
     [SerializeField] protected List<EnemyAttackRange> enemyAttackRange = new List<EnemyAttackRange>();
 
     [Space(10)]

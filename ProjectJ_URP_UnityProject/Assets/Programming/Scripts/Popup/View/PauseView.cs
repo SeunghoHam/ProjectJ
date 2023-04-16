@@ -13,8 +13,7 @@ namespace Assets.Scripts.UI.Popup.PopupView
     {
         public FlowManager FlowManager { get; set; }
         public ResourcesManager ResourcesManager { get; set; }
-
-        [SerializeField] private Button _saveButton;
+        public DataManager DataManager { get; set; }
         [SerializeField] private Button _closeButton; // 되돌아가기
 
         
@@ -35,17 +34,17 @@ namespace Assets.Scripts.UI.Popup.PopupView
         {
             AddEvent();
             _statusView.SetActive(false);
+            _systemView.SetActive(false);
         }
         private void AddEvent()
         {
             //Debug.Log("Pause활성화");
             _closeButton.OnClickAsObservable().Subscribe(_ => 
                 Action_Close());
-            _saveButton.OnClickAsObservable().Subscribe(_ =>
-                DataSave());
-
             _statusButton.OnClickAsObservable().Subscribe(_ =>
                 Action_Status());
+            _systemButton.OnClickAsObservable().Subscribe(_ =>
+                Action_System());
         }
         
         #region ::: ButtonAction :::
@@ -59,28 +58,25 @@ namespace Assets.Scripts.UI.Popup.PopupView
             }
             else 
             {
-                Debug.Log("PauseView 에서 호출");
+                //Debug.Log("PauseView 에서 호출");
                 //PopupManager.Instance.PopupList[1].GetComponent<UIPopupPause>().Hide();
                 PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView.Input_Pause();
             }
         }
-        private void DataSave()
-        {
-            DataManager.Instance.DataSave();
-        }
-
 
         private void Action_Status()
         {
             PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView._currentViewType =
                 BasicView.CurrentViewType.Status;
             _statusView.SetActive(true);
+            _statusView.GetComponent<ViewStatus>().GetDataManager(DataManager);
         }
 
         private void Action_System()
         {
             PopupManager.Instance.PopupList[0].GetComponent<UIPopupBasic>()._basicView._currentViewType =
                 BasicView.CurrentViewType.System;
+            _systemView.SetActive(true);
         }
         
         #endregion
