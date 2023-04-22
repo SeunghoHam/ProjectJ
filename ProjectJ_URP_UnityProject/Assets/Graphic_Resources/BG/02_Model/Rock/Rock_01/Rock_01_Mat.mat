@@ -22,8 +22,10 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Rock_01_Mat
   m_Shader: {fileID: 4800000, guid: e2202a731f799ca4a8d84caa3026ef89, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _EMISSION_OPTION_NONE
   m_InvalidKeywords:
+  - _KEYWORD0_NONE
   - _MODE_EMISSION_DISSOLVE
   - _MODE_NONE
   m_LightmapFlags: 4
@@ -99,6 +101,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 323869107529a3b4bb153f2f3b77b226, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Tex_Emission:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -132,10 +138,12 @@ Material:
     - _DetailNormalMapScale: 1
     - _Dissolve: 0
     - _DstBlend: 0
+    - _Emission_Option: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Keyword0: 0
     - _Metallic: 0
     - _Mode: 0
     - _Mode_Emission: 1
@@ -157,6 +165,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Dissolve_Color: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Emission_Color: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tint: {r: 0.9622642, g: 0.9572046, b: 0.8851015, a: 0}
   m_BuildTextureStacks: []
