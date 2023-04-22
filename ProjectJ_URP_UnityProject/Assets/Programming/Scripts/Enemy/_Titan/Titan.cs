@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Titan : Enemy
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public override void Attack()
     {
         if (_data._type == EnemyData.EnemyType.Boss)

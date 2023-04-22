@@ -14,15 +14,14 @@ public class Character : UnitBase
     
     private int _maxHP = 10;
     private int _curHP;
+
+    #region ::: PlayerData :::
     
-    #region  ::: CharacterData :::
-
-    public string userName = "YatChoo";
-    public float exp = 1000;
-    public int[] status;
-
+    public string plyaerName;
+    public int playerRunes;
+    public float playerExp;
+    
     #endregion
-    
     // Can Interact?
     #region ::: Interact :::
 
@@ -49,7 +48,6 @@ public class Character : UnitBase
             }
         }
     }
-
     #endregion
 
     // 값이 변경될 때 마다 BasicView에서 hpStatus 변경함

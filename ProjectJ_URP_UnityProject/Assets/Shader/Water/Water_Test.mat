@@ -68,15 +68,15 @@ Material:
     - _Normal_Strngth: 0.21
     - _Normal_Tile: 0.7
     - _Refract: 0.03
-    - _Smoothness: 0.9
+    - _Smoothness: 0.85
     - _TessMax: 5
     - _TessMin: 1
     - _TessPhongStrength: 0.379
     - _TessValue: 2.8
-    - _Waves_Form_Tile: 2
+    - _Waves_Form_Tile: 1.46
     - _Waves_Height: 0.1
     - _Waves_Speed: 0.35
-    - _Waves_Tile: 50
+    - _Waves_Tile: 38.92
     m_Colors:
     - _Color: {r: 0.19045925, g: 0.36178353, b: 0.3773585, a: 1}
     - _Color_HighlightUseWavesAlpha: {r: 4.027324, g: 4.5943785, b: 4.7170873, a: 0}
